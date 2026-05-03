@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="google-site-verification" content="google0d37b19d90a5feba" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ブレーカーが落ちる原因｜電気代が高い原因も30秒診断</title>
+
+  <meta name="description" content="ブレーカーが落ちる・電気代が高い原因は主幹ブレーカーかもしれません。修理と見直しで電気代が下がり、結果的にプラスになるケースもあります。" />
+
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px 40px 20px 28px;
+      max-width: 420px;
+      margin: auto;
+      background: #fff;
+      color: #111;
+      text-align: left;
+    }
+
+    h1 {
+      color: #d00;
+      font-size: 28px;
+      text-align: center;
+      line-height: 1.3;
+      max-width: 320px;
+      margin: 0 auto 16px;
+      word-break: keep-all;
+    }
+
+    .lead {
+      font-size: 17px;
+      line-height: 1.7;
+      max-width: 320px;
+      margin: 0 auto 16px;
+      word-break: keep-all;
+      text-align: center;
+    }
+
+    .cta-button,
+    .submit-button {
+      width: 90%;
+      margin: 16px auto 24px;
+      display: block;
+      padding: 18px;
+      background: #e00000;
+      color: #fff;
+      border: none;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .box {
+      border: 1px solid #ddd;
+      border-radius: 18px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      background: #fff;
+    }
+
+    .center-title {
+      text-align: center;
+      font-size: 21px;
+      margin-bottom: 10px;
+    }
+
+    .question-center {
+      text-align: center;
+      font-size: 17px;
+      font-weight: bold;
+      margin-bottom: 18px;
+    }
+
+    .check-group,
+    .radio-group {
+      width: fit-content;
+      margin-left: 22px;
+      text-align: left;
+    }
+
+    .check-item,
+    .radio-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 17px;
+      margin-bottom: 18px;
+    }
+
+    .check-item input,
+    .radio-item input {
+      width: 22px;
+      height: 22px;
+    }
+
+    input[type="tel"],
+    input[type="text"] {
+      width: 90%;
+      margin: 0 auto 16px;
+      display: block;
+      padding: 16px 18px;
+      font-size: 17px;
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    .footer-note {
+      font-size: 16px;
+      color: #555;
+      margin: 2px auto 2px;
+      width: 95%;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .footer-note-left {
+      font-size: 16px;
+      color: #555;
+      margin: 2px auto 2px;
+      width: 95%;
+      line-height: 1.7;
+      text-align: left;
+    }
+
+    #resultMsg {
+      margin-top: 14px;
+      font-size: 15px;
+      color: #444;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>
+    ブレーカーが落ちる<br>
+    電気代が高い
+  </h1>
+
+  <p class="lead">
+    原因は<br>
+    主幹ブレーカーの可能性があります
+  </p>
+
+  <button class="cta-button" onclick="goToForm()">
+    30秒診断
+  </button>
+
+  <div class="box">
+    <div class="center-title">費用対効果</div>
+
+    <p class="footer-note">
+      主幹を電子ブレーカーに交換することで、電気代を下げ、<br>
+      修理代金を相殺し、さらにメリットを生み出せるかを診断します
+    </p>
+  </div>
+
+  <div class="box">
+    <div class="center-title" id="target">
+      あなたのブレーカーは
+    </div>
+
+    <div class="check-group">
+
+      <label class="check-item">
+        <input type="checkbox" value="5年以上使ってる">
+        <span>5年以上使ってる</span>
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" value="落ちたことがある">
+        <span>落ちたことがある</span>
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" value="居抜き">
+        <span>居抜き</span>
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" value="電気代高い">
+        <span>電気代高い</span>
+      </label>
+
+    </div>
+  </div>
+
+  <div class="box">
+
+    <div class="center-title">
+      種類
+    </div>
+
+    <div class="question-center">
+      どちらのブレーカーですか？
+    </div>
+
+    <div class="radio-group">
+
+      <label class="radio-item">
+        <input type="radio" name="breakerType" value="電灯のみ（100V）">
+        <span>電灯のみ（100V）</span>
+      </label>
+
+      <label class="radio-item">
+        <input type="radio" name="breakerType" value="動力あり（200V）">
+        <span>動力あり（200V）</span>
+      </label>
+
+    </div>
+
+    <input type="tel" id="phone" placeholder="電話番号">
+    <input type="text" id="store" placeholder="店名">
+
+    <p class="footer-note-left">
+      内容確認のためご連絡する場合があります
+    </p>
+
+    <button class="submit-button" onclick="sendData()">
+      送信
+    </button>
+
+    <p id="resultMsg"></p>
+
+  </div>
+
+  <script>
+    function goToForm() {
+      document.getElementById("target")
+        .scrollIntoView({ behavior: "smooth" });
+    }
+
+    async function sendData() {
+
+      const phone =
+        document.getElementById("phone").value.trim();
+
+      const store =
+        document.getElementById("store").value.trim();
+
+      const resultMsg =
+        document.getElementById("resultMsg");
+
+      const breakerTypeEl =
+        document.querySelector('input[name="breakerType"]:checked');
+
+      const breakerType =
+        breakerTypeEl ? breakerTypeEl.value : "";
+
+      const checks =
+        [...document.querySelectorAll('input[type="checkbox"]:checked')]
+          .map(el => el.value)
+          .join(" / ");
+
+      const surveyText =
+        checks || "なし";
+
+      if (!breakerType) {
+        resultMsg.textContent =
+          "ブレーカーを選択してください";
+        return;
+      }
+
+      if (!phone) {
+        resultMsg.textContent =
+          "電話番号を入力してください";
+        return;
+      }
+
+      resultMsg.textContent = "送信中...";
+
+      try {
+
+        await fetch(
+          "https://plain-wind-57e1.neocorporation-murakami.workers.dev/",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+              phone,
+              store,
+              breakerType,
+              checks: surveyText,
+              アンケート: surveyText
+            })
+          }
+        );
+
+        if (breakerType === "電灯のみ（100V）") {
+
+          window.location.href =
+            "https://kakaku.com/electricity-gas/";
+
+          return;
+        }
+
+        window.location.href =
+          `step2.html?phone=${encodeURIComponent(phone)}&store=${encodeURIComponent(store)}&breakerType=${encodeURIComponent(breakerType)}&checks=${encodeURIComponent(surveyText)}`;
+
+      } catch (e) {
+
+        resultMsg.textContent = "送信失敗";
+
+      }
+
+    }
+  </script>
+
+</body>
+</html>
