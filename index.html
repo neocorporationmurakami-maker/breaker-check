@@ -233,6 +233,7 @@
   </div>
 
   <script>
+
     function goToForm() {
       document.getElementById("target")
         .scrollIntoView({ behavior: "smooth" });
@@ -257,11 +258,7 @@
 
       const checks =
         [...document.querySelectorAll('input[type="checkbox"]:checked')]
-          .map(el => el.value)
-          .join(" / ");
-
-      const surveyText =
-        checks || "なし";
+          .map(el => el.value);
 
       if (!breakerType) {
         resultMsg.textContent =
@@ -292,8 +289,7 @@
               phone,
               store,
               breakerType,
-              checks: surveyText,
-              アンケート: surveyText
+              checks
             })
           }
         );
@@ -307,7 +303,7 @@
         }
 
         window.location.href =
-          `step2.html?phone=${encodeURIComponent(phone)}&store=${encodeURIComponent(store)}&breakerType=${encodeURIComponent(breakerType)}&checks=${encodeURIComponent(surveyText)}`;
+          `step2.html?phone=${encodeURIComponent(phone)}&store=${encodeURIComponent(store)}&breakerType=${encodeURIComponent(breakerType)}`;
 
       } catch (e) {
 
@@ -316,6 +312,7 @@
       }
 
     }
+
   </script>
 
 </body>
