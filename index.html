@@ -233,14 +233,12 @@
   </div>
 
   <script>
-
     function goToForm() {
       document.getElementById("target")
         .scrollIntoView({ behavior: "smooth" });
     }
 
     async function sendData() {
-
       const phone = document.getElementById("phone").value.trim();
       const store = document.getElementById("store").value.trim();
       const resultMsg = document.getElementById("resultMsg");
@@ -252,7 +250,7 @@
         breakerTypeEl ? breakerTypeEl.value : "";
 
       const frontChecks =
-        [...document.querySelectorAll('input[type="checkbox"]:checked')]
+        [...document.querySelectorAll('.check-group input:checked')]
           .map(el => el.value);
 
       if (!breakerType) {
@@ -268,7 +266,6 @@
       resultMsg.textContent = "送信中...";
 
       try {
-
         await fetch(
           "https://plain-wind-57e1.neocorporation-murakami.workers.dev/",
           {
@@ -296,9 +293,7 @@
       } catch (e) {
         resultMsg.textContent = "送信失敗";
       }
-
     }
-
   </script>
 
 </body>
