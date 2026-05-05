@@ -14,18 +14,21 @@
       background: #fff;
       color: #111;
     }
+
     h1 {
       font-size: 24px;
       line-height: 1.5;
       margin-bottom: 10px;
       text-align: center;
     }
+
     .sub {
       font-size: 15px;
       color: #555;
       margin-bottom: 24px;
       text-align: center;
     }
+
     .box {
       border: 1px solid #ddd;
       border-radius: 18px;
@@ -33,12 +36,14 @@
       margin-bottom: 20px;
       background: #fff;
     }
+
     .question {
       font-size: 18px;
       font-weight: bold;
       margin-bottom: 16px;
       line-height: 1.5;
     }
+
     .btn {
       width: 100%;
       padding: 15px 14px;
@@ -49,18 +54,24 @@
       border-radius: 10px;
       cursor: pointer;
     }
-    .hidden { display: none; }
+
+    .hidden {
+      display: none;
+    }
+
     .done {
       font-size: 16px;
       line-height: 1.7;
       color: #444;
       text-align: center;
     }
+
     .section-label {
       font-size: 14px;
       color: #555;
       margin: 10px 0 8px;
     }
+
     input[type="date"] {
       width: 100%;
       padding: 14px;
@@ -78,14 +89,12 @@
   <h1>ありがとうございます<br>確認後ご連絡いたします</h1>
   <p class="sub">お待ちの間にご確認ください</p>
 
-  <!-- Q1 -->
   <div class="box" id="q1">
     <div class="question">検針票はお手元にありますか？</div>
     <button class="btn" onclick="answerQ1('ある')">ある</button>
     <button class="btn" onclick="answerQ1('ない')">ない</button>
   </div>
 
-  <!-- Q2 -->
   <div class="box hidden" id="q2">
     <div class="question">契約容量はわかりますか？</div>
     <button class="btn" onclick="answerQ2('exact')">わかる</button>
@@ -94,7 +103,6 @@
     <button class="btn" onclick="answerQ2('unknown')">わからない</button>
   </div>
 
-  <!-- Q2A -->
   <div class="box hidden" id="q2a">
     <div class="question">契約容量を選択してください</div>
     <div id="kwList"></div>
@@ -102,7 +110,6 @@
     <button class="btn" onclick="backToQ2()">前の質問に戻る</button>
   </div>
 
-  <!-- Q2B -->
   <div class="box hidden" id="q2b">
     <div class="question">契約容量はどれくらいですか？</div>
     <button class="btn" onclick="answerQ2B('5kW未満')">5kW未満</button>
@@ -116,7 +123,6 @@
     <button class="btn" onclick="backToQ2()">前の質問に戻る</button>
   </div>
 
-  <!-- Breaker -->
   <div class="box hidden" id="qBreaker">
     <div class="question">ブレーカーの種類（主幹）</div>
     <button class="btn" onclick="answerBreaker('電子ブレーカー')">電子ブレーカー</button>
@@ -124,14 +130,12 @@
     <button class="btn" onclick="answerBreaker('わからない')">わからない</button>
   </div>
 
-  <!-- Q3 -->
   <div class="box hidden" id="q3">
     <div class="question">過去2年以内に東京電力をご利用でしたか？</div>
     <button class="btn" onclick="answerQ3('はい')">はい</button>
     <button class="btn" onclick="answerQ3('いいえ')">いいえ</button>
   </div>
 
-  <!-- Q4 -->
   <div class="box hidden" id="q4">
     <div class="question">東京電力から検針票を入手する許可を頂けますか？</div>
     <button class="btn" onclick="answerQ4('許可する')">許可する</button>
@@ -140,7 +144,6 @@
     <button class="btn" onclick="answerQ4('スキップ')">スキップ</button>
   </div>
 
-  <!-- Q5 -->
   <div class="box hidden" id="q5">
     <div class="question">まだ他にも200Vの契約がありますか？</div>
     <button class="btn" onclick="answerQ5('ある')">ある</button>
@@ -148,12 +151,13 @@
     <button class="btn" onclick="answerQ5('わからない')">わからない</button>
   </div>
 
-  <!-- STEP4 -->
   <div class="box hidden" id="q6">
     <div id="firstChoice">
       <div class="question">訪問希望日時</div>
+
       <div class="section-label">第一希望</div>
       <div id="firstQuick"></div>
+
       <div class="section-label">それ以降</div>
       <input type="date" id="firstDate" />
       <div id="firstTimeWrap" class="hidden">
@@ -166,7 +170,9 @@
 
     <div id="secondChoice" class="hidden">
       <div class="question">第二希望（任意）</div>
+
       <div id="secondQuick"></div>
+
       <div class="section-label">それ以降</div>
       <input type="date" id="secondDate" />
       <div id="secondTimeWrap" class="hidden">
@@ -174,12 +180,12 @@
         <button class="btn" onclick="selectSecondTime('午後')">午後</button>
         <button class="btn" onclick="selectSecondTime('夕方以降')">夕方以降</button>
       </div>
+
       <button class="btn" onclick="backToFirstChoice()">第一候補に戻る</button>
       <button class="btn" onclick="skipSecond()">スキップ</button>
     </div>
   </div>
 
-  <!-- Position -->
   <div class="box hidden" id="q7">
     <div class="question">ご本人様の立場</div>
     <button class="btn" onclick="answerPosition('代表者')">代表者</button>
@@ -188,7 +194,6 @@
     <button class="btn" onclick="answerPosition('その他')">その他</button>
   </div>
 
-  <!-- Merit -->
   <div class="box hidden" id="q8">
     <div class="question">電気料金が今より大きく下がった場合、メリットは感じますか？</div>
     <button class="btn" onclick="finishStep2('はい')">はい</button>
@@ -196,136 +201,374 @@
     <button class="btn" onclick="finishStep2('スキップ')">スキップ</button>
   </div>
 
-  <!-- Done -->
   <div class="box hidden" id="doneBox">
     <div class="done">ご入力ありがとうございました<br>確認後ご連絡いたします</div>
   </div>
 
-<script>
-const params = new URLSearchParams(location.search);
+  <script>
+    const params = new URLSearchParams(location.search);
+    const phone = params.get("phone") || "";
+    const store = params.get("store") || "";
+    const breakerType = params.get("breakerType") || "";
+    const frontChecks = params.get("frontChecks") || "";
 
-const phone = params.get("phone") || "";
-const store = params.get("store") || "";
-const breakerType = params.get("breakerType") || "";
-const frontChecks = params.get("frontChecks") || ""; // ★前半受け取り
+    const sessionId = Date.now() + "_" + Math.random().toString(36).slice(2);
+    const webhookUrl = "https://plain-wind-57e1.neocorporation-murakami.workers.dev/";
 
-const sessionId = Date.now() + "_" + Math.random().toString(36).slice(2);
-const webhookUrl = "https://plain-wind-57e1.neocorporation-murakami.workers.dev/";
+    let hasPaper = false;
+    let askedTepco = false;
+    let capacityUnknown = false;
+    let contractIndex = 1;
 
-let hasPaper = false;
-let askedTepco = false;
-let capacityUnknown = false;
-let contractIndex = 1;
+    const surveyData = {
+      frontChecks: frontChecks,
+      q1_paper: "",
+      q2_capacity_mode: "",
+      q2_capacity_exact: "",
+      q2_capacity_rough: "",
+      q_breaker_type: "",
+      q3_tepco_within_2years: "",
+      q4_tepco_permission: "",
+      q5_more_200v_contracts: "",
+      firstChoice: "",
+      secondChoice: "",
+      position: "",
+      merit: ""
+    };
 
-const surveyData = {
-  frontChecks: frontChecks, // ★保持
-  q1_paper: "",
-  q2_capacity_mode: "",
-  q2_capacity_exact: "",
-  q2_capacity_rough: "",
-  q_breaker_type: "",
-  q3_tepco_within_2years: "",
-  q4_tepco_permission: "",
-  q5_more_200v_contracts: "",
-  firstChoice: "",
-  secondChoice: "",
-  position: "",
-  merit: ""
-};
+    function buildSurveyText() {
+      const lines = [];
 
-function buildSurveyText() {
-  const lines = [];
+      if (surveyData.q1_paper) lines.push(`検針票:${surveyData.q1_paper}`);
 
-  if (surveyData.frontChecks) {
-    lines.push(`前半:${surveyData.frontChecks}`); // ★出力
-  }
+      if (surveyData.q2_capacity_exact) {
+        lines.push(`容量:${surveyData.q2_capacity_exact}`);
+      } else if (surveyData.q2_capacity_rough) {
+        lines.push(`容量:${surveyData.q2_capacity_rough}`);
+      } else if (surveyData.q2_capacity_mode === "50") {
+        lines.push("容量:50kW以上");
+      } else if (surveyData.q2_capacity_mode === "unknown") {
+        lines.push("容量:わからない");
+      }
 
-  if (surveyData.q1_paper) lines.push(`検針票:${surveyData.q1_paper}`);
+      if (surveyData.q_breaker_type) lines.push(`主幹:${surveyData.q_breaker_type}`);
+      if (surveyData.q3_tepco_within_2years) lines.push(`東電2年以内:${surveyData.q3_tepco_within_2years}`);
+      if (surveyData.q4_tepco_permission) lines.push(`検針票許可:${surveyData.q4_tepco_permission}`);
+      if (surveyData.q5_more_200v_contracts) lines.push(`他200V:${surveyData.q5_more_200v_contracts}`);
+      if (surveyData.firstChoice) lines.push(`第一希望:${surveyData.firstChoice}`);
+      if (surveyData.secondChoice) lines.push(`第二希望:${surveyData.secondChoice}`);
+      if (surveyData.position) lines.push(`立場:${surveyData.position}`);
+      if (surveyData.merit) lines.push(`メリット:${surveyData.merit}`);
 
-  if (surveyData.q2_capacity_exact) {
-    lines.push(`容量:${surveyData.q2_capacity_exact}`);
-  } else if (surveyData.q2_capacity_rough) {
-    lines.push(`容量:${surveyData.q2_capacity_rough}`);
-  } else if (surveyData.q2_capacity_mode === "50") {
-    lines.push("容量:50kW以上");
-  } else if (surveyData.q2_capacity_mode === "unknown") {
-    lines.push("容量:わからない");
-  }
+      return lines.join(" / ");
+    }
 
-  if (surveyData.q_breaker_type) lines.push(`主幹:${surveyData.q_breaker_type}`);
-  if (surveyData.q3_tepco_within_2years) lines.push(`東電2年以内:${surveyData.q3_tepco_within_2years}`);
-  if (surveyData.q4_tepco_permission) lines.push(`検針票許可:${surveyData.q4_tepco_permission}`);
-  if (surveyData.q5_more_200v_contracts) lines.push(`他200V:${surveyData.q5_more_200v_contracts}`);
-  if (surveyData.firstChoice) lines.push(`第一希望:${surveyData.firstChoice}`);
-  if (surveyData.secondChoice) lines.push(`第二希望:${surveyData.secondChoice}`);
-  if (surveyData.position) lines.push(`立場:${surveyData.position}`);
-  if (surveyData.merit) lines.push(`メリット:${surveyData.merit}`);
+    function send(partial) {
+      Object.assign(surveyData, partial);
 
-  return lines.join(" / ");
-}
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId,
+          step: "step2",
+          contractIndex,
+          phone,
+          store,
+          breakerType,
+          frontChecks,
+          アンケート: buildSurveyText()
+        })
+      }).catch(() => {});
+    }
 
-function send(partial) {
-  Object.assign(surveyData, partial);
+    function hide(id) {
+      document.getElementById(id).classList.add("hidden");
+    }
 
-  fetch(webhookUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sessionId,
-      step: "step2",
-      contractIndex,
-      phone,
-      store,
-      breakerType,
-      アンケート: buildSurveyText()
-    })
-  });
-}
+    function show(id) {
+      document.getElementById(id).classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-// --- 以下UIロジックは元のまま ---
-function hide(id){ document.getElementById(id).classList.add("hidden"); }
-function show(id){ document.getElementById(id).classList.remove("hidden"); }
+    function buildKwList() {
+      const wrap = document.getElementById("kwList");
+      wrap.innerHTML = "";
+      for (let i = 1; i <= 49; i++) {
+        const btn = document.createElement("button");
+        btn.className = "btn";
+        btn.textContent = `${i}kW`;
+        btn.onclick = () => answerQ2A(`${i}kW`);
+        wrap.appendChild(btn);
+      }
+    }
+    buildKwList();
 
-function answerQ1(v){ hasPaper=(v==="ある"); send({q1_paper:v}); hide("q1"); show("q2"); }
-function answerQ2(v){
-  send({q2_capacity_mode:v,q2_capacity_exact:"",q2_capacity_rough:""});
-  hide("q2");
-  if(v==="exact"){ show("q2a"); return; }
-  if(v==="rough"){ show("q2b"); return; }
-  if(v==="50"){ capacityUnknown=false; send({q2_capacity_exact:"50kW以上"}); show("qBreaker"); return; }
-  capacityUnknown=true; show("qBreaker");
-}
-function answerQ2A(v){ capacityUnknown=false; send({q2_capacity_exact:v}); hide("q2a"); show("qBreaker"); }
-function answerQ2B(v){ capacityUnknown=(v==="わからない"); send({q2_capacity_rough:v}); hide("q2b"); show("qBreaker"); }
-function backToQ2(){ hide("q2a"); hide("q2b"); show("q2"); }
-function answerBreaker(v){
-  send({q_breaker_type:v}); hide("qBreaker");
-  if((!hasPaper||capacityUnknown)&&!askedTepco){ askedTepco=true; show("q3"); } else { show("q5"); }
-}
-function answerQ3(v){ send({q3_tepco_within_2years:v}); hide("q3"); if(v==="はい"&&!hasPaper){ show("q4"); } else { show("q5"); } }
-function answerQ4(v){ send({q4_tepco_permission:v}); hide("q4"); show("q5"); }
-function answerQ5(v){
-  send({q5_more_200v_contracts:v}); hide("q5");
-  if(v==="ある"){
-    contractIndex+=1; capacityUnknown=false;
-    Object.assign(surveyData,{
-      q2_capacity_mode:"",q2_capacity_exact:"",q2_capacity_rough:"",
-      q_breaker_type:"",q3_tepco_within_2years:"",q4_tepco_permission:"",q5_more_200v_contracts:""
+    function answerQ1(val) {
+      hasPaper = (val === "ある");
+      send({ q1_paper: val });
+
+      hide("q1");
+      show("q2");
+    }
+
+    function answerQ2(val) {
+      send({
+        q2_capacity_mode: val,
+        q2_capacity_exact: "",
+        q2_capacity_rough: ""
+      });
+
+      hide("q2");
+
+      if (val === "exact") {
+        show("q2a");
+        return;
+      }
+      if (val === "rough") {
+        show("q2b");
+        return;
+      }
+      if (val === "50") {
+        capacityUnknown = false;
+        send({ q2_capacity_exact: "50kW以上" });
+        show("qBreaker");
+        return;
+      }
+
+      capacityUnknown = true;
+      show("qBreaker");
+    }
+
+    function answerQ2A(val) {
+      capacityUnknown = false;
+      send({ q2_capacity_exact: val });
+
+      hide("q2a");
+      show("qBreaker");
+    }
+
+    function answerQ2B(val) {
+      capacityUnknown = (val === "わからない");
+      send({ q2_capacity_rough: val });
+
+      hide("q2b");
+      show("qBreaker");
+    }
+
+    function backToQ2() {
+      hide("q2a");
+      hide("q2b");
+      show("q2");
+    }
+
+    function answerBreaker(val) {
+      send({ q_breaker_type: val });
+
+      hide("qBreaker");
+
+      if ((!hasPaper || capacityUnknown) && !askedTepco) {
+        askedTepco = true;
+        show("q3");
+      } else {
+        show("q5");
+      }
+    }
+
+    function answerQ3(val) {
+      send({ q3_tepco_within_2years: val });
+
+      hide("q3");
+
+      if (val === "はい" && !hasPaper) {
+        show("q4");
+      } else {
+        show("q5");
+      }
+    }
+
+    function answerQ4(val) {
+      send({ q4_tepco_permission: val });
+
+      hide("q4");
+      show("q5");
+    }
+
+    function answerQ5(val) {
+      send({ q5_more_200v_contracts: val });
+
+      hide("q5");
+
+      if (val === "ある") {
+        contractIndex += 1;
+        capacityUnknown = false;
+
+        Object.assign(surveyData, {
+          q2_capacity_mode: "",
+          q2_capacity_exact: "",
+          q2_capacity_rough: "",
+          q_breaker_type: "",
+          q3_tepco_within_2years: "",
+          q4_tepco_permission: "",
+          q5_more_200v_contracts: ""
+        });
+
+        show("q2");
+      } else {
+        show("q6");
+      }
+    }
+
+    function isWeekday(d) {
+      const day = d.getDay();
+      return day >= 1 && day <= 5;
+    }
+
+    function nextWeekday(date) {
+      const d = new Date(date);
+      d.setDate(d.getDate() + 1);
+      while (!isWeekday(d)) {
+        d.setDate(d.getDate() + 1);
+      }
+      return d;
+    }
+
+    function formatJP(d) {
+      const w = ["日","月","火","水","木","金","土"];
+      return `${d.getMonth() + 1}月${d.getDate()}日（${w[d.getDay()]}）`;
+    }
+
+    function getQuickSlots() {
+      const now = new Date();
+
+      let day1 = new Date(now);
+
+      if (!isWeekday(day1)) {
+        day1 = nextWeekday(day1);
+      }
+
+      const h = now.getHours();
+      let slots1 = [];
+
+      if (isWeekday(now)) {
+        if (h < 9) {
+          slots1 = ["午前", "午後", "夕方以降"];
+        } else if (h < 13) {
+          slots1 = ["午後", "夕方以降"];
+        } else if (h < 15) {
+          slots1 = ["夕方以降"];
+        }
+      }
+
+      if (slots1.length === 0) {
+        day1 = nextWeekday(day1);
+        slots1 = ["午前", "午後", "夕方以降"];
+      }
+
+      const day2 = nextWeekday(day1);
+
+      return [
+        { date: new Date(day1), slots: slots1 },
+        { date: new Date(day2), slots: ["午前", "午後", "夕方以降"] }
+      ];
+    }
+
+    function renderQuickChoices() {
+      const firstQuick = document.getElementById("firstQuick");
+      const secondQuick = document.getElementById("secondQuick");
+      firstQuick.innerHTML = "";
+      secondQuick.innerHTML = "";
+
+      const quicks = getQuickSlots();
+
+      quicks.forEach(q => {
+        q.slots.forEach(t => {
+          const b1 = document.createElement("button");
+          b1.className = "btn";
+          b1.textContent = `${formatJP(q.date)} ${t}`;
+          b1.onclick = () => selectFirstQuick(formatJP(q.date), t);
+          firstQuick.appendChild(b1);
+
+          const b2 = document.createElement("button");
+          b2.className = "btn";
+          b2.textContent = `${formatJP(q.date)} ${t}`;
+          b2.onclick = () => selectSecondQuick(formatJP(q.date), t);
+          secondQuick.appendChild(b2);
+        });
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderQuickChoices();
+
+      document.getElementById("firstDate").addEventListener("change", () => {
+        document.getElementById("firstTimeWrap").classList.remove("hidden");
+      });
+
+      document.getElementById("secondDate").addEventListener("change", () => {
+        document.getElementById("secondTimeWrap").classList.remove("hidden");
+      });
     });
-    show("q2");
-  } else { show("q6"); }
-}
-function selectFirstQuick(d,t){ send({firstChoice:`${d} ${t}`}); document.getElementById("firstChoice").classList.add("hidden"); document.getElementById("secondChoice").classList.remove("hidden"); }
-function selectFirstTime(t){ const d=document.getElementById("firstDate").value; if(!d)return; send({firstChoice:`${d} ${t}`}); document.getElementById("firstChoice").classList.add("hidden"); document.getElementById("secondChoice").classList.remove("hidden"); }
-function skipFirst(){ send({firstChoice:"スキップ"}); document.getElementById("firstChoice").classList.add("hidden"); document.getElementById("secondChoice").classList.remove("hidden"); }
-function backToFirstChoice(){ document.getElementById("secondChoice").classList.add("hidden"); document.getElementById("firstChoice").classList.remove("hidden"); }
-function selectSecondQuick(d,t){ send({secondChoice:`${d} ${t}`}); finishDateStep(); }
-function selectSecondTime(t){ const d=document.getElementById("secondDate").value; if(!d)return; send({secondChoice:`${d} ${t}`}); finishDateStep(); }
-function skipSecond(){ send({secondChoice:"スキップ"}); finishDateStep(); }
-function finishDateStep(){ hide("q6"); show("q7"); }
-function answerPosition(v){ send({position:v}); hide("q7"); show("q8"); }
-function finishStep2(v){ send({merit:v}); hide("q8"); show("doneBox"); }
-</script>
+
+    function selectFirstQuick(dateLabel, timeLabel) {
+      send({ firstChoice: `${dateLabel} ${timeLabel}` });
+      document.getElementById("firstChoice").classList.add("hidden");
+      document.getElementById("secondChoice").classList.remove("hidden");
+    }
+
+    function selectFirstTime(timeLabel) {
+      const d = document.getElementById("firstDate").value;
+      if (!d) return;
+      send({ firstChoice: `${d} ${timeLabel}` });
+      document.getElementById("firstChoice").classList.add("hidden");
+      document.getElementById("secondChoice").classList.remove("hidden");
+    }
+
+    function skipFirst() {
+      send({ firstChoice: "スキップ" });
+      document.getElementById("firstChoice").classList.add("hidden");
+      document.getElementById("secondChoice").classList.remove("hidden");
+    }
+
+    function backToFirstChoice() {
+      document.getElementById("secondChoice").classList.add("hidden");
+      document.getElementById("firstChoice").classList.remove("hidden");
+    }
+
+    function selectSecondQuick(dateLabel, timeLabel) {
+      send({ secondChoice: `${dateLabel} ${timeLabel}` });
+      finishDateStep();
+    }
+
+    function selectSecondTime(timeLabel) {
+      const d = document.getElementById("secondDate").value;
+      if (!d) return;
+      send({ secondChoice: `${d} ${timeLabel}` });
+      finishDateStep();
+    }
+
+    function skipSecond() {
+      send({ secondChoice: "スキップ" });
+      finishDateStep();
+    }
+
+    function finishDateStep() {
+      hide("q6");
+      show("q7");
+    }
+
+    function answerPosition(val) {
+      send({ position: val });
+      hide("q7");
+      show("q8");
+    }
+
+    function finishStep2(val) {
+      send({ merit: val });
+      hide("q8");
+      show("doneBox");
+    }
+  </script>
 
 </body>
-  </html>
+</html>
