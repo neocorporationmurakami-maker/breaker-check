@@ -377,6 +377,204 @@ function result(){
   } else if(state.contract==='電灯（アンペア契約）') {
     extra='契約アンペア：'+document.getElementById('lightAv').textContent+'A<br>月使用量：'+(document.getElementById('lightAUsage').value||'未入力')+'kWh<br>月額料金：'+(document.getElementById('lightAFee').value||'未入力')+'円<br>';
   } else if(state.contract==='電灯（kVA契約）') {
+    extra='契約容量：'+document.getElementById('kvavclassList.add('active');scrollTo(0,0)}
+function init(){document.getElementById('simpleIndustries').innerHTML=simpleIndustries.map(x=>`<button class="card" onclick="selectSimple('${x}')">${x}（簡易版）</button>`).join('')}
+function selectRestaurant(){state.industry='飲食店';renderEq();show('equipment')}
+function selectSimple(name){state.industry=name;document.getElementById('eqTitle').textContent=name+'の設備を選んでください';document.getElementById('eq').innerHTML='<div class="box">簡易版では、設備詳細はDM診断時に確認します。<br>このまま契約種別の入力へ進んでください。</div>';show('equipment')}
+function makeLabel(name,cls=''){return `<label class="card ${cls}" data-name="${name}"><input type="checkbox" value="${name}" onchange="onCheck(this)"><span>${name}</span></label>`}
+function renderEq(){document.getElementById('eqTitle').textContent='飲食店の設備を選んでください';let d=document.getElementById('eq');d.innerHTML='';baseEquipment.forEach(x=>d.innerHTML+=makeLabel(x))}
+function onCheck(cb){const name=cb.value;const parent=cb.closest('label');if(cb.checked){showChildren(name,parent)}else{removeChildren(name)}}
+function showChildren(name,parent){const children=childMap[name]||[];let after=parent;children.forEach(child=>{if(document.querySelector(`[data-name="${child}"]`))return;after.insertAdjacentHTML('afterend',makeLabel(child,'child'));after=document.querySelector(`[data-name="${child}"]`)})}
+function removeChildren(name){(childMap[name]||[]).forEach(child=>{const el=document.querySelector(`[data-name="${child}"]`);if(el){const input=el.querySelector('input');if(input&&input.checked)removeChildren(child);el.remove()}})}
+function saveEq(){state.equipment=[...document.querySelectorAll('#eq input:checked')].map(i=>i.value);show('contract')}
+function setContract(v){state.contract=v;if(v==='低圧動力（三相200V）')show('capacity');else if(v==='高圧')show('highvoltage');else if(v==='電灯（アンペア契約）')show('lightA');else if(v==='電灯（kVA契約）')show('lightKva');else show('unknown')}
+function setCap(v){state.capacity=v;let over=v==='50kW以上';document.getElementById('capv').textContent=over?'50+':v;document.getElementById('caps').innerHTML='選択中：<b>'+v+(over?'':'kW')+'</b>';document.getElementById('over50').classList.toggle('selected',over)}
+function nextAfterUsage(){state.usage=document.getElementById('usageKwh').value;state.fee=document.getElementById('fee').value;show('breaker')}
+function setBreaker(btn,v){document.querySelectorAll('.br').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.breaker=v}
+function ampUnknown(){state.ampKnown=false;state.amp='わからない';document.getElementById('ampU').classList.add('selected');document.getElementById('ampK').classList.remove('selected');document.getElementById('ampp').classList.add('hide')}
+function ampKnown(){state.ampKnown=true;setAmp(document.getElementById('amp').value);document.getElementById('ampK').classList.add('selected');document.getElementById('ampU').classList.remove('selected');document.getElementById('ampp').classList.remove('hide')}
+function setAmp(v){state.amp=v>=251?'251以上':v;document.getElementById('ampv').textContent=state.amp}
+function setCubicle(btn,v){document.querySelectorAll('.hv').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.cubicle=v}
+function setLightA(v){document.getElementById('lightAv').textContent=v}
+function setKva(v){let over=v==='100kVA以上';document.getElementById('kvav').textContent=over?'100+':v;document.getElementById('over100kva').classList.toggle('selected',over)}
+function yen(n){return Math.round(n).toLocaleString('ja-JP')+'円'}
+function calc(){let total=0,base=0,maxI=0;state.equipment.forEach(n=>{let s=scores[n];if(!s)return;total+=s[0];if(s[1]==='常時'||s[1]==='半常時')base+=s[0];if(s[1]==='間欠')maxI=Math.max(maxI,s[0])});let app=Math.ceil(total),ref=Math.ceil(Math.max(base,maxI)),red=Math.max(0,app-ref);let stars='★☆☆☆☆';if(red>=15)stars='★★★★★';else if(red>=10)stars='★★★★☆';else if(red>=5)stars='★★★☆☆';else if(red>=2)stars='★★☆☆☆';let gross=red*1100,sys=Math.max(3000,Math.round(gross*0.6)),min=Math.max(0,gross-sys),max=min+ref*350;return {stars,min,max,red}}
+function readInputs() {
+  state.usage = document.getElementById('usageKwh') ? document.getElementById('usageKwh').value : state.usage;
+  state.fee = document.getElementById('fee') ? document.getElementById('fee').value : state.fee;
+}
+
+function currentRecord(r, extraText){
+  return {
+    storeNo: state.storeNo,
+    contractNo: state.contractNo,
+    industry: state.industry || "未選択",
+    equipment: [...state.equipment],
+    contract: state.contract || "未選択",
+    capacity: state.capacity,
+    usage: state.usage || "",
+    fee: state.fee || "",
+    breaker: state.breaker,
+    amp: state.ampKnown ? state.amp + "A" : "わからない",
+    cubicle: state.cubicle,
+    minMonthly: r ? r.min : 0,
+    maxMonthly: r ? r.max : 0,
+    extraText: extraText || ""
+  };
+}
+function saveCurrentRecord(r, extraText){
+  const key = state.storeNo + "-" + state.contractNo;
+  const record = currentRecord(r, extraText);
+  const idx = state.records.findIndex(x => (x.storeNo + "-" + x.contractNo) === key);
+  if(idx >= 0) state.records[idx] = record;
+  else state.records.push(record);
+}
+function resetForNextContract(){
+  state.equipment = [];
+  state.contract = "";
+  state.capacity = "25";
+  state.usage = "";
+  state.fee = "";
+  state.breaker = "わからない";
+  state.ampKnown = false;
+  state.amp = "わからない";
+  state.cubicle = "わからない";
+}
+function sameStoreContract(){
+  state.contractNo += 1;
+  resetForNextContract();
+  show("contract");
+}
+function newStoreContract(){
+  state.storeNo += 1;
+  state.contractNo = 1;
+  resetForNextContract();
+  show("industry");
+}
+
+
+async function sendToChat(diagnosisId){
+  const stores = new Set(state.records.map(r => r.storeNo));
+  const minTotal = state.records.reduce((s,r)=>s+(r.minMonthly||0),0);
+  const maxTotal = state.records.reduce((s,r)=>s+(r.maxMonthly||0),0);
+
+  const payload = {
+    diagnosisId,
+    stores: stores.size,
+    contracts: state.records.length,
+    records: state.records,
+    result:{
+      minMonthly:minTotal,
+      maxMonthly:maxTotal,
+      min7y:minTotal*84,
+      max7y:maxTotal*84
+    }
+  };
+
+  try{
+    await fetch('https://plain-wind-57e1.neocorporation-murakami.workers.dev/',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+  }catch(e){
+    console.error(e);
+  }
+  return diagnosisId;
+}
+
+function makeDiagnosisId(){
+  const now = new Date();
+  const mm = String(now.getMonth() + 1).padStart(2, "0");
+  const dd = String(now.getDate()).padStart(2, "0");
+  const hh = String(now.getHours()).padStart(2, "0");
+  const mi = String(now.getMinutes()).padStart(2, "0");
+  const ss = String(now.getSeconds()).padStart(2, "0");
+  return mm + dd + "-" + hh + mi + "-" + ss;
+}
+
+function buildDmText(id, minTotal, maxTotal){
+  const stores = new Set(state.records.map(r => r.storeNo));
+  const industries = [...new Set(state.records.map(r => r.industry).filter(Boolean))].join("、") || "未選択";
+  const equipmentList = [...new Set(state.records.flatMap(r => r.equipment || []))].join("、") || "簡易版・未選択";
+
+  return [
+    "診断希望",
+    "",
+    "ID",
+    id,
+    "",
+    "業種",
+    industries,
+    "",
+    "店舗数",
+    String(stores.size),
+    "",
+    "契約数",
+    String(state.records.length),
+    "",
+    "設備",
+    equipmentList,
+    "",
+    "参考サンプル削減月額",
+    yen(minTotal) + "〜" + yen(maxTotal)
+  ].join("\n");
+}
+
+async function copyText(text){
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+
+async function finishAndOpenDm(){
+  const diagnosisId = makeDiagnosisId();
+  await sendToChat(diagnosisId);
+  await finishDiagnosis(true, diagnosisId);
+  alert('診断データを送信しました\nID: '+diagnosisId);
+}
+
+async function finishDiagnosis(openDm=false, fixedDiagnosisId=null){
+  const stores = new Set(state.records.map(r => r.storeNo));
+  const minTotal = state.records.reduce((sum,r)=>sum+(r.minMonthly||0),0);
+  const maxTotal = state.records.reduce((sum,r)=>sum+(r.maxMonthly||0),0);
+  const list = state.records.map(r => {
+    return "店舗" + r.storeNo + "・契約" + r.contractNo + "<br>" +
+      "業種：" + r.industry + "<br>" +
+      "契約種別：" + r.contract + "<br>" +
+      "設備：" + (r.equipment.length ? r.equipment.join("、") : "簡易版・未選択") + "<br>";
+  }).join("<hr>");
+  const diagnosisId = fixedDiagnosisId || makeDiagnosisId();
+  const dmText = buildDmText(diagnosisId, minTotal, maxTotal);
+  const copied = await copyText(dmText);
+
+  document.getElementById("finalSummary").innerHTML =
+    "<b>ID</b><br>" + diagnosisId + "<br><br>" +
+    "<b>DM文</b><br><pre style='white-space:pre-wrap;background:white;border-radius:12px;padding:12px;'>" + dmText.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") + "</pre>" +
+    (copied ? "<b>DM文をコピーしました。</b><br><br>" : "<b>DM文をコピーして、Xで送信してください。</b><br><br>") +
+    "<b>診断店舗数</b><br>" + stores.size + "店舗<br><br>" +
+    "<b>診断契約数</b><br>" + state.records.length + "契約<br><br>" +
+    "<b>診断一覧</b><br>" + list + "<br>" +
+    "<b>参考サンプル削減月額 合計</b><br>" +
+    yen(minTotal) + "〜" + yen(maxTotal) + "<br><br>" +
+    "<b>参考サンプル削減7年総額 合計</b><br>" +
+    yen(minTotal * 84) + "〜" + yen(maxTotal * 84);
+  show("finalResult");
+  if(openDm){ window.open("https://x.com/breaker_check", "_blank"); }
+}
+
+function result(){
+  readInputs();
+  let r=calc();
+  let extra='';
+  if(state.contract==='高圧'){
+    extra='キュービクル低圧化検討：'+state.cubicle+'<br>契約電力：'+(document.getElementById('hvContract').value||'未入力')+'kW<br>最大デマンド：'+(document.getElementById('hvDemand').value||'未入力')+'kW<br>月使用量：'+(document.getElementById('hvUsage').value||'未入力')+'kWh<br>月額料金：'+(document.getElementById('hvFee').value||'未入力')+'円<br>';
+  } else if(state.contract==='電灯（アンペア契約）') {
+    extra='契約アンペア：'+document.getElementById('lightAv').textContent+'A<br>月使用量：'+(document.getElementById('lightAUsage').value||'未入力')+'kWh<br>月額料金：'+(document.getElementById('lightAFee').value||'未入力')+'円<br>';
+  } else if(state.contract==='電灯（kVA契約）') {
     extra='契約容量：'+document.getElementById('kvav<p class="note">電話番号・会社名・担当者名の入力は不要です。</p>
 <button class="main" onclick="show('industry')">診断をはじめる</button>
 </section>
