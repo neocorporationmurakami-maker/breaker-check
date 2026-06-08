@@ -152,6 +152,349 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 <h2>診断結果</h2>
 <div class="box"><p>削減可能性</p><div id="stars" class="stars">★★★★☆</div><p id="rtxt">入力内容を確認しました。</p></div>
 <div id="summary" class="box"></div>
+<div class="box"><b>詳細診断をご希望の方へ</b><br>下のボタンから詳細診断へ進んでください。</div>
+<div class="box">
+<b>他に診断したい契約はありますか？</b><br>
+<button class="card" onclick="sameStoreContract()">同じ店舗の別契約</button>
+<button class="card" onclick="newStoreContract()">別店舗を診断する</button>
+<button class="card" onclick="finishAndOpenDm()">診断を終了して詳細診断を依頼する</button>
+</div>
+<a class="btn main" href="https://x.com/breaker_check" target="_blank">Xで @breaker_check を開く</a>
+<button class="back" onclick="show('contract')">← 入力内容を修正する</button>
+</section>
+
+<section id="finalResult" class="section">
+<h2>診断完了</h2>
+<div id="finalSummary" class="box"></div>
+<div class="box"><b>詳細診断をご希望の方へ</b><br>下のボタンから詳細診断へ進んでください。</div>
+<a class="btn main" href="https://x.com/breaker_check" target="_blank">Xで @breaker_check を開く</a>
+<button class="back" onclick="show('industry')">← もう一度診断する</button>
+</section>
+</main>
+
+<script>
+const baseEquipment=["オーブン", "焼き機", "蒸し機", "フライヤー", "動力炊飯器", "食器洗浄機", "製氷機", "業務用エアコン", "冷凍冷蔵庫", "冷蔵庫", "冷凍庫"];
+const childMap={"オーブン": ["オーブン 2台目"], "フライヤー": ["フライヤー 2台目"], "食器洗浄機": ["食器洗浄機 2台目"], "製氷機": ["製氷機 2台目"], "業務用エアコン": ["業務用エアコン 2台目", "業務用エアコン 3台目", "業務用エアコン 4台目"], "冷凍冷蔵庫": ["冷凍冷蔵庫 2台目"], "冷蔵庫": ["冷蔵庫 2台目", "冷蔵庫 3台目"], "冷凍庫": ["冷凍庫 2台目"]};
+const simpleIndustries=["コインランドリー", "クリーニング工場", "自動車整備工場・ガソリンスタンド", "マンション・ビル・駐車場オーナー", "木工", "鉄工・製缶", "金属加工", "プラスチック加工", "倉庫", "洋菓子・パン屋", "和菓子", "食品加工", "牧場（酪農・畜産）", "競走馬牧場", "堆肥場", "米農家・米穀店", "ハウス農家", "その他農家", "漁港・水産業"];
+const scores={"オーブン": [10, "間欠"], "オーブン 2台目": [10, "間欠"], "焼き機": [1.5, "間欠"], "蒸し機": [1.5, "間欠"], "フライヤー": [2, "間欠"], "フライヤー 2台目": [2, "間欠"], "動力炊飯器": [3, "間欠"], "食器洗浄機": [3, "間欠"], "食器洗浄機 2台目": [3, "間欠"], "製氷機": [2, "常時"], "製氷機 2台目": [2, "常時"], "業務用エアコン": [5, "半常時"], "業務用エアコン 2台目": [5, "半常時"], "業務用エアコン 3台目": [5, "半常時"], "業務用エアコン 4台目": [5, "半常時"], "冷凍冷蔵庫": [7.5, "常時"], "冷凍冷蔵庫 2台目": [7.5, "常時"], "冷蔵庫": [5, "常時"], "冷蔵庫 2台目": [5, "常時"], "冷蔵庫 3台目": [5, "常時"], "冷凍庫": [5, "常時"], "冷凍庫 2台目": [5, "常時"]};
+let state={industry:"",equipment:[],contract:"",capacity:"25",usage:"",fee:"",breaker:"わからない",ampKnown:false,amp:"わからない",cubicle:"わからない",storeNo:1,contractNo:1,records:[]};
+
+function show(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');scrollTo(0,0)}
+function init(){document.getElementById('simpleIndustries').innerHTML=simpleIndustries.map(x=>`<button class="card" onclick="selectSimple('${x}')">${x}（簡易版）</button>`).join('')}
+function selectRestaurant(){state.industry='飲食店';renderEq();show('equipment')}
+function selectSimple(name){state.industry=name;document.getElementById('eqTitle').textContent=name+'の設備を選んでください';document.getElementById('eq').innerHTML='<div class="box">簡易版では、設備詳細はDM診断時に確認します。<br>このまま契約種別の入力へ進んでください。</div>';show('equipment')}
+function makeLabel(name,cls=''){return `<label class="card ${cls}" data-name="${name}"><input type="checkbox" value="${name}" onchange="onCheck(this)"><span>${name}</span></label>`}
+function renderEq(){document.getElementById('eqTitle').textContent='飲食店の設備を選んでください';let d=document.getElementById('eq');d.innerHTML='';baseEquipment.forEach(x=>d.innerHTML+=makeLabel(x))}
+function onCheck(cb){const name=cb.value;const parent=cb.closest('label');if(cb.checked){showChildren(name,parent)}else{removeChildren(name)}}
+function showChildren(name,parent){const children=childMap[name]||[];let after=parent;children.forEach(child=>{if(document.querySelector(`[data-name="${child}"]`))return;after.insertAdjacentHTML('afterend',makeLabel(child,'child'));after=document.querySelector(`[data-name="${child}"]`)})}
+function removeChildren(name){(childMap[name]||[]).forEach(child=>{const el=document.querySelector(`[data-name="${child}"]`);if(el){const input=el.querySelector('input');if(input&&input.checked)removeChildren(child);el.remove()}})}
+function saveEq(){state.equipment=[...document.querySelectorAll('#eq input:checked')].map(i=>i.value);show('contract')}
+function setContract(v){state.contract=v;if(v==='低圧動力（三相200V）')show('capacity');else if(v==='高圧')show('highvoltage');else if(v==='電灯（アンペア契約）')show('lightA');else if(v==='電灯（kVA契約）')show('lightKva');else show('unknown')}
+function setCap(v){state.capacity=v;let over=v==='50kW以上';document.getElementById('capv').textContent=over?'50+':v;document.getElementById('caps').innerHTML='選択中：<b>'+v+(over?'':'kW')+'</b>';document.getElementById('over50').classList.toggle('selected',over)}
+function nextAfterUsage(){state.usage=document.getElementById('usageKwh').value;state.fee=document.getElementById('fee').value;show('breaker')}
+function setBreaker(btn,v){document.querySelectorAll('.br').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.breaker=v}
+function ampUnknown(){state.ampKnown=false;state.amp='わからない';document.getElementById('ampU').classList.add('selected');document.getElementById('ampK').classList.remove('selected');document.getElementById('ampp').classList.add('hide')}
+function ampKnown(){state.ampKnown=true;setAmp(document.getElementById('amp').value);document.getElementById('ampK').classList.add('selected');document.getElementById('ampU').classList.remove('selected');document.getElementById('ampp').classList.remove('hide')}
+function setAmp(v){state.amp=v>=251?'251以上':v;document.getElementById('ampv').textContent=state.amp}
+function setCubicle(btn,v){document.querySelectorAll('.hv').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.cubicle=v}
+function setLightA(v){document.getElementById('lightAv').textContent=v}
+function setKva(v){let over=v==='100kVA以上';document.getElementById('kvav').textContent=over?'100+':v;document.getElementById('over100kva').classList.toggle('selected',over)}
+function yen(n){return Math.round(n).toLocaleString('ja-JP')+'円'}
+function calc(){let total=0,base=0,maxI=0;state.equipment.forEach(n=>{let s=scores[n];if(!s)return;total+=s[0];if(s[1]==='常時'||s[1]==='半常時')base+=s[0];if(s[1]==='間欠')maxI=Math.max(maxI,s[0])});let app=Math.ceil(total),ref=Math.ceil(Math.max(base,maxI)),red=Math.max(0,app-ref);let stars='★☆☆☆☆';if(red>=15)stars='★★★★★';else if(red>=10)stars='★★★★☆';else if(red>=5)stars='★★★☆☆';else if(red>=2)stars='★★☆☆☆';let gross=red*1100,sys=Math.max(3000,Math.round(gross*0.6)),min=Math.max(0,gross-sys),max=min+ref*350;return {stars,min,max,red}}
+function readInputs() {
+  state.usage = document.getElementById('usageKwh') ? document.getElementById('usageKwh').value : state.usage;
+  state.fee = document.getElementById('fee') ? document.getElementById('fee').value : state.fee;
+}
+
+function currentRecord(r, extraText){
+  return {
+    storeNo: state.storeNo,
+    contractNo: state.contractNo,
+    industry: state.industry || "未選択",
+    equipment: [...state.equipment],
+    contract: state.contract || "未選択",
+    capacity: state.capacity,
+    usage: state.usage || "",
+    fee: state.fee || "",
+    breaker: state.breaker,
+    amp: state.ampKnown ? state.amp + "A" : "わからない",
+    cubicle: state.cubicle,
+    minMonthly: r ? r.min : 0,
+    maxMonthly: r ? r.max : 0,
+    extraText: extraText || ""
+  };
+}
+function saveCurrentRecord(r, extraText){
+  const key = state.storeNo + "-" + state.contractNo;
+  const record = currentRecord(r, extraText);
+  const idx = state.records.findIndex(x => (x.storeNo + "-" + x.contractNo) === key);
+  if(idx >= 0) state.records[idx] = record;
+  else state.records.push(record);
+}
+function resetForNextContract(){
+  state.equipment = [];
+  state.contract = "";
+  state.capacity = "25";
+  state.usage = "";
+  state.fee = "";
+  state.breaker = "わからない";
+  state.ampKnown = false;
+  state.amp = "わからない";
+  state.cubicle = "わからない";
+}
+function sameStoreContract(){
+  state.contractNo += 1;
+  resetForNextContract();
+  show("contract");
+}
+function newStoreContract(){
+  state.storeNo += 1;
+  state.contractNo = 1;
+  resetForNextContract();
+  show("industry");
+}
+
+
+async function sendToChat(diagnosisId){
+  const stores = new Set(state.records.map(r => r.storeNo));
+  const minTotal = state.records.reduce((s,r)=>s+(r.minMonthly||0),0);
+  const maxTotal = state.records.reduce((s,r)=>s+(r.maxMonthly||0),0);
+
+  const payload = {
+    diagnosisId,
+    stores: stores.size,
+    contracts: state.records.length,
+    records: state.records,
+    result:{
+      minMonthly:minTotal,
+      maxMonthly:maxTotal,
+      min7y:minTotal*84,
+      max7y:maxTotal*84
+    }
+  };
+
+  try{
+    await fetch('https://plain-wind-57e1.neocorporation-murakami.workers.dev/',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+  }catch(e){
+    console.error(e);
+  }
+  return diagnosisId;
+}
+
+function makeDiagnosisId(){
+  const now = new Date();
+  const mm = String(now.getMonth() + 1).padStart(2, "0");
+  const dd = String(now.getDate()).padStart(2, "0");
+  const hh = String(now.getHours()).padStart(2, "0");
+  const mi = String(now.getMinutes()).padStart(2, "0");
+  const ss = String(now.getSeconds()).padStart(2, "0");
+  return mm + dd + "-" + hh + mi + "-" + ss;
+}
+
+function buildDmText(id, minTotal, maxTotal){
+  const stores = new Set(state.records.map(r => r.storeNo));
+  const industries = [...new Set(state.records.map(r => r.industry).filter(Boolean))].join("、") || "未選択";
+  const equipmentList = [...new Set(state.records.flatMap(r => r.equipment || []))].join("、") || "簡易版・未選択";
+
+  return [
+    "診断希望",
+    "",
+    "ID",
+    id,
+    "",
+    "業種",
+    industries,
+    "",
+    "店舗数",
+    String(stores.size),
+    "",
+    "契約数",
+    String(state.records.length),
+    "",
+    "設備",
+    equipmentList,
+    "",
+    "参考サンプル削減月額",
+    yen(minTotal) + "〜" + yen(maxTotal)
+  ].join("\n");
+}
+
+async function copyText(text){
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+
+async function finishAndOpenDm(){
+  const diagnosisId = makeDiagnosisId();
+  await sendToChat(diagnosisId);
+  await finishDiagnosis(true, diagnosisId);
+  alert('診断データを送信しました\nID: '+diagnosisId);
+}
+
+async function finishDiagnosis(openDm=false, fixedDiagnosisId=null){
+  const stores = new Set(state.records.map(r => r.storeNo));
+  const minTotal = state.records.reduce((sum,r)=>sum+(r.minMonthly||0),0);
+  const maxTotal = state.records.reduce((sum,r)=>sum+(r.maxMonthly||0),0);
+  const list = state.records.map(r => {
+    return "店舗" + r.storeNo + "・契約" + r.contractNo + "<br>" +
+      "業種：" + r.industry + "<br>" +
+      "契約種別：" + r.contract + "<br>" +
+      "設備：" + (r.equipment.length ? r.equipment.join("、") : "簡易版・未選択") + "<br>";
+  }).join("<hr>");
+  const diagnosisId = fixedDiagnosisId || makeDiagnosisId();
+  const dmText = buildDmText(diagnosisId, minTotal, maxTotal);
+  const copied = await copyText(dmText);
+
+  document.getElementById("finalSummary").innerHTML =
+    "<b>ID</b><br>" + diagnosisId + "<br><br>" +
+    "<b>DM文</b><br><pre style='white-space:pre-wrap;background:white;border-radius:12px;padding:12px;'>" + dmText.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") + "</pre>" +
+    (copied ? "<b>DM文をコピーしました。</b><br><br>" : "<b>DM文をコピーして、Xで送信してください。</b><br><br>") +
+    "<b>診断店舗数</b><br>" + stores.size + "店舗<br><br>" +
+    "<b>診断契約数</b><br>" + state.records.length + "契約<br><br>" +
+    "<b>診断一覧</b><br>" + list + "<br>" +
+    "<b>参考サンプル削減月額 合計</b><br>" +
+    yen(minTotal) + "〜" + yen(maxTotal) + "<br><br>" +
+    "<b>参考サンプル削減7年総額 合計</b><br>" +
+    yen(minTotal * 84) + "〜" + yen(maxTotal * 84);
+  show("finalResult");
+  if(openDm){ window.open("https://x.com/breaker_check", "_blank"); }
+}
+
+function result(){
+  readInputs();
+  let r=calc();
+  let extra='';
+  if(state.contract==='高圧'){
+    extra='キュービクル低圧化検討：'+state.cubicle+'<br>契約電力：'+(document.getElementById('hvContract').value||'未入力')+'kW<br>最大デマンド：'+(document.getElementById('hvDemand').value||'未入力')+'kW<br>月使用量：'+(document.getElementById('hvUsage').value||'未入力')+'kWh<br>月額料金：'+(document.getElementById('hvFee').value||'未入力')+'円<br>';
+  } else if(state.contract==='電灯（アンペア契約）') {
+    extra='契約アンペア：'+document.getElementById('lightAv').textContent+'A<br>月使用量：'+(document.getElementById('lightAUsage').value||'未入力')+'kWh<br>月額料金：'+(document.getElementById('lightAFee').value||'未入力')+'円<br>';
+  } else if(state.contract==='電灯（kVA契約）') {
+    extra='契約容量：'+document.getElementById('kvav<p class="note">電話番号・会社名・担当者名の入力は不要です。</p>
+<button class="main" onclick="show('industry')">診断をはじめる</button>
+</section>
+
+<section id="industry" class="section">
+<h2>業種を選んでください</h2>
+<p>まずは診断したい店舗・施設に近い業種を選んでください。</p>
+<p class="subhead">詳細版</p>
+<button class="card" onclick="selectRestaurant()">飲食店（詳細版）</button>
+<p class="subhead">簡易版</p>
+<div id="simpleIndustries"></div>
+<div class="box">現在、対応業種を順次追加中です。<br>掲載のない業種でも診断できる場合がありますので、お気軽にDMください。</div>
+<p class="note">※この診断は、動力契約ごとに入力してください。</p>
+</section>
+
+<section id="equipment" class="section">
+<h2 id="eqTitle">設備を選んでください</h2>
+<p>該当する設備にチェックを入れてください。複数台ある設備は、1台目にチェックすると追加で表示されます。</p>
+<div id="eq"></div>
+<button class="main" onclick="saveEq()">次へ</button>
+<button class="back" onclick="show('industry')">← 業種選択に戻る</button>
+</section>
+
+<section id="contract" class="section">
+<h2>診断したい契約を選んでください</h2>
+<button class="card" onclick="setContract('低圧動力（三相200V）')">低圧動力（三相200V）</button>
+<button class="card" onclick="setContract('高圧')">高圧</button>
+<button class="card" onclick="setContract('電灯（アンペア契約）')">電灯（アンペア契約）</button>
+<button class="card" onclick="setContract('電灯（kVA契約）')">電灯（kVA契約）</button>
+<button class="card" onclick="setContract('その他・わからない')">その他・わからない</button>
+<button class="back" onclick="show('equipment')">← 設備選択に戻る</button>
+</section>
+
+<section id="capacity" class="section">
+<h2>契約容量を選んでください</h2>
+<p>現在の動力契約容量を選んでください。</p>
+<div class="big"><span id="capv">25</span>kW</div>
+<input id="cap" type="range" min="1" max="49" value="25" oninput="setCap(this.value)">
+<button id="over50" class="card" onclick="setCap('50kW以上')">50kW以上</button>
+<div id="caps" class="box">選択中：<b>25kW</b></div>
+<button class="main" onclick="show('usageSection')">次へ</button>
+<button class="back" onclick="show('contract')">← 契約種別に戻る</button>
+</section>
+
+<section id="usageSection" class="section">
+<h2>使用量と料金を入力してください</h2>
+<p>検針票を見ながら入力してください。</p>
+<p><b>月使用量（kWh）</b></p>
+<input id="usageKwh" type="number" min="0" max="9999" step="1" placeholder="例：2480" oninput="state.usage=this.value">
+<p><b>月額電気料金（円）</b></p>
+<input id="fee" type="number" min="0" max="999999" step="1" placeholder="例：58234" oninput="state.fee=this.value">
+<button class="main" onclick="nextAfterUsage()">次へ</button>
+<button class="back" onclick="show('capacity')">← 契約容量に戻る</button>
+</section>
+
+<section id="breaker" class="section">
+<h2>主幹ブレーカーについて</h2>
+<p>わかる範囲でご回答ください。</p>
+<p><b>現在の主幹ブレーカー</b></p>
+<button class="card br" onclick="setBreaker(this,'電子ブレーカー')">電子ブレーカー</button>
+<button class="card br" onclick="setBreaker(this,'ノーマルブレーカー')">ノーマルブレーカー</button>
+<button class="card br selected" onclick="setBreaker(this,'わからない')">わからない</button>
+<div class="box"><b>主幹ブレーカーのアンペア（任意）</b><p class="note">わかる方のみご入力ください。</p>
+<button id="ampU" class="card selected" onclick="ampUnknown()">わからない</button>
+<button id="ampK" class="card" onclick="ampKnown()">アンペアがわかる</button>
+<div id="ampp" class="hide"><div class="big"><span id="ampv">125</span>A</div><input id="amp" type="range" min="3" max="251" value="125" oninput="setAmp(this.value)"><p class="note">3A〜251A以上</p></div></div>
+<button class="main" onclick="result()">診断結果を見る</button>
+<button class="back" onclick="show('usageSection')">← 使用量と料金に戻る</button>
+</section>
+
+<section id="highvoltage" class="section">
+<h2>高圧契約について</h2>
+<p>キュービクルをやめて、低圧契約への変更を検討していますか？</p>
+<button class="card hv" onclick="setCubicle(this,'はい')">はい</button>
+<button class="card hv" onclick="setCubicle(this,'いいえ')">いいえ</button>
+<button class="card hv selected" onclick="setCubicle(this,'わからない')">わからない</button>
+<p><b>契約電力（kW）</b></p><input id="hvContract" type="number" min="0" max="9999" placeholder="例：80">
+<p><b>最大デマンド（kW）</b></p><input id="hvDemand" type="number" min="0" max="9999" placeholder="例：62">
+<p><b>月使用量（kWh）</b></p><input id="hvUsage" type="number" min="0" max="999999" placeholder="例：18000">
+<p><b>月額電気料金（円）</b></p><input id="hvFee" type="number" min="0" max="9999999" placeholder="例：520000">
+<button class="main" onclick="result()">診断結果を見る</button>
+<button class="back" onclick="show('contract')">← 契約種別に戻る</button>
+</section>
+
+<section id="lightA" class="section">
+<h2>電灯契約（アンペア）</h2>
+<p>契約アンペアを選んでください。</p>
+<div class="big"><span id="lightAv">50</span>A</div>
+<input id="lightARange" type="range" min="10" max="90" step="10" value="50" oninput="setLightA(this.value)">
+<p><b>月使用量（kWh）</b></p><input id="lightAUsage" type="number" min="0" max="9999" placeholder="例：350">
+<p><b>月額電気料金（円）</b></p><input id="lightAFee" type="number" min="0" max="999999" placeholder="例：18000">
+<button class="main" onclick="result()">診断結果を見る</button>
+<button class="back" onclick="show('contract')">← 契約種別に戻る</button>
+</section>
+
+<section id="lightKva" class="section">
+<h2>電灯契約（kVA）</h2>
+<p>契約容量を選んでください。</p>
+<div class="big"><span id="kvav">30</span>kVA</div>
+<input id="kvaRange" type="range" min="1" max="99" step="1" value="30" oninput="setKva(this.value)">
+<button id="over100kva" class="card" onclick="setKva('100kVA以上')">100kVA以上</button>
+<p><b>月使用量（kWh）</b></p><input id="kvaUsage" type="number" min="0" max="99999" placeholder="例：2500">
+<p><b>月額電気料金（円）</b></p><input id="kvaFee" type="number" min="0" max="999999" placeholder="例：85000">
+<button class="main" onclick="result()">診断結果を見る</button>
+<button class="back" onclick="show('contract')">← 契約種別に戻る</button>
+</section>
+
+<section id="unknown" class="section">
+<h2>契約内容の確認が必要です</h2>
+<div class="box">契約内容が特殊、または不明な可能性があります。<br>詳細を確認できれば診断できる場合があります。<br><br>お気軽に「その他契約」とDMください。</div>
+<a class="btn main" href="https://x.com/messages" target="_blank">Xで相談する</a>
+<button class="back" onclick="show('contract')">← 契約種別に戻る</button>
+</section>
+
+<section id="result" class="section">
+<h2>診断結果</h2>
+<div class="box"><p>削減可能性</p><div id="stars" class="stars">★★★★☆</div><p id="rtxt">入力内容を確認しました。</p></div>
+<div id="summary" class="box"></div>
 <div class="box"><b>詳細診断をご希望の方へ</b><br>下の「診断を終了して詳細診断を依頼する」から進んでください。</div>
 <div class="box">
 <b>他に診断したい契約はありますか？</b><br>
