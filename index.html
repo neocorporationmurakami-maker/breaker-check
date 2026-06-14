@@ -518,8 +518,8 @@ async function finishDiagnosis(openDm=false, fixedDiagnosisId=null){
 
 function result(){
   readInputs();
-  let r=calc();
   let extra='';
+
   if(state.contract==='高圧'){
     extra='キュービクル低圧化検討：'+state.cubicle+'<br>契約電力：'+(document.getElementById('hvContract').value||'未入力')+'kW<br>最大デマンド：'+(document.getElementById('hvDemand').value||'未入力')+'kW<br>月使用量：'+(document.getElementById('hvUsage').value||'未入力')+'kWh<br>月額料金：'+(document.getElementById('hvFee').value||'未入力')+'円<br>';
   } else if(state.contract==='電灯（アンペア契約）') {
@@ -529,9 +529,33 @@ function result(){
   } else {
     extra='契約容量：'+state.capacity+(state.capacity==='50kW以上'?'':'kW')+'<br>月使用量：'+(state.usage||'未入力')+'kWh<br>月額料金：'+(state.fee||'未入力')+'円<br>主幹ブレーカー：'+state.breaker+'<br>主幹ブレーカーのアンペア：'+(state.ampKnown?state.amp+'A':'わからない')+'<br>';
   }
-  document.getElementById('stars').textContent=state.contract==='低圧動力（三相200V）'?r.stars:'★★★☆☆';
+
+  const baseSummary='<b>入力内容</b><br>店舗：店舗'+state.storeNo+'<br>契約：契約'+state.contractNo+'<br>業種：'+state.industry+'<br>設備：'+(state.equipment.join('、')||'簡易版・未選択')+'<br>契約種別：'+state.contract+'<br>'+extra+'<br>';
+
+  if(state.contract==='電灯（アンペア契約）' || state.contract==='電灯（kVA契約）'){
+    const r={stars:'★☆☆☆☆',min:500,max:500};
+    document.getElementById('stars').textContent=r.stars;
+    document.getElementById('rtxt').textContent='電灯契約のため、詳細はDMで送ってください。';
+    document.getElementById('summary').innerHTML=baseSummary+'<b>参考サンプル削減月額</b><br>500円〜<br><br><b>参考サンプル削減7年総額</b><br>42,000円〜<br><br><b>詳細はDMで送ってください。</b>';
+    saveCurrentRecord(r, extra);
+    show('result');
+    return;
+  }
+
+  if(state.contract!=='低圧動力（三相200V）'){
+    const r={stars:'★☆☆☆☆',min:0,max:0};
+    document.getElementById('stars').textContent=r.stars;
+    document.getElementById('rtxt').textContent='詳細はDMで送ってください。';
+    document.getElementById('summary').innerHTML=baseSummary+'<b>詳細はDMで送ってください。</b>';
+    saveCurrentRecord(r, extra);
+    show('result');
+    return;
+  }
+
+  let r=calc();
+  document.getElementById('stars').textContent=r.stars;
   document.getElementById('rtxt').textContent='入力内容を確認しました。詳細診断でより正確に確認できます。';
-  document.getElementById('summary').innerHTML='<b>入力内容</b><br>店舗：店舗'+state.storeNo+'<br>契約：契約'+state.contractNo+'<br>業種：'+state.industry+'<br>設備：'+(state.equipment.join('、')||'簡易版・未選択')+'<br>契約種別：'+state.contract+'<br>'+extra+'<br><b>参考サンプル削減月額</b><br>'+yen(r.min)+'〜'+yen(r.max)+'<br><br><b>参考サンプル削減7年総額</b><br>'+yen(r.min*84)+'〜'+yen(r.max*84)+'<br><br><span class="note">※表示金額は、手数料・諸費用等を差し引いた後に手元に残る標準的な参考値です。</span>';
+  document.getElementById('summary').innerHTML=baseSummary+'<b>参考サンプル削減月額</b><br>'+yen(r.min)+'〜'+yen(r.max)+'<br><br><b>参考サンプル削減7年総額</b><br>'+yen(r.min*84)+'〜'+yen(r.max*84)+'<br><br><span class="note">※表示金額は、手数料・諸費用等を差し引いた後に手元に残る標準的な参考値です。</span>';
   saveCurrentRecord(r, extra);
   show('result');
 }
