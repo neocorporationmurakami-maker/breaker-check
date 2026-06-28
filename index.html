@@ -217,7 +217,7 @@ function renderEq(){
   const equipment=(activeConfig&&activeConfig.equipment)||[];
 
   if(activeConfig && activeConfig.inputMode === 'quantity'){
-    document.querySelector('#equipment p').textContent='台数を選んでください。10台以上は10台として概算します。';
+    document.querySelector('#equipment p').textContent=activeConfig.quantityNote || '台数を選んでください。';
     equipment.forEach(x=>d.innerHTML+=makeQtyRow(x));
     return;
   }
@@ -292,13 +292,28 @@ function getContractKw(){
 }
 function calcStandard(){
   let total=0,base=0,maxI=0;
-  state.equipment.forEach(n=>{
-    let s=getScore(n);
-    if(!s)return;
-    total+=s[0];
-    if(s[1]==='常時'||s[1]==='半常時')base+=s[0];
-    if(s[1]==='間欠')maxI=Math.max(maxI,s[0])
-  });
+
+  if(activeConfig && activeConfig.inputMode === 'quantity'){
+    const quantities=state.equipmentQuantities || {};
+    Object.keys(quantities).forEach(name=>{
+      const qty=Number(quantities[name]||0);
+      const s=activeConfig&&activeConfig.scores ? activeConfig.scores[name] : null;
+      if(!s || qty<=0)return;
+      const kw=s[0]*qty;
+      total+=kw;
+      if(s[1]==='常時'||s[1]==='半常時')base+=kw;
+      if(s[1]==='間欠')maxI=Math.max(maxI,kw);
+    });
+  } else {
+    state.equipment.forEach(n=>{
+      let s=getScore(n);
+      if(!s)return;
+      total+=s[0];
+      if(s[1]==='常時'||s[1]==='半常時')base+=s[0];
+      if(s[1]==='間欠')maxI=Math.max(maxI,s[0])
+    });
+  }
+
   const contractKw=getContractKw();
   let ref=Math.ceil(Math.max(base,maxI));
   let red=Math.max(0,contractKw-ref);
