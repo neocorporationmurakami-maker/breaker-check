@@ -41,30 +41,27 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 <section id="industry" class="section">
 <h2>業種を選んでください</h2>
 <p>まずは診断したい店舗・施設に近い業種を選んでください。</p>
-<p class="subhead">詳細版</p>
-<button class="card" onclick="selectRestaurant()">飲食店（詳細版）</button>
-<button class="card" onclick="selectIndustry('コインランドリー')">コインランドリー（詳細版）</button>
-<button class="card" onclick="selectIndustry('クリーニング工場')">クリーニング工場（詳細版）</button>
-<button class="card" onclick="selectIndustry('自動車整備工場・ガソリンスタンド')">自動車整備工場・ガソリンスタンド（詳細版）</button>
-<button class="card" onclick="selectIndustry('マンション・ビル・駐車場オーナー')">マンション・ビル・駐車場オーナー（詳細版）</button>
-<button class="card" onclick="selectIndustry('木工')">木工（詳細版）</button>
-<button class="card" onclick="selectIndustry('鉄工・製缶')">鉄工・製缶（詳細版）</button>
-<button class="card" onclick="selectIndustry('金属加工')">金属加工（詳細版）</button>
-<button class="card" onclick="selectIndustry('プラスチック加工')">プラスチック加工（詳細版）</button>
-<button class="card" onclick="selectIndustry('倉庫')">倉庫（詳細版）</button>
-<button class="card" onclick="selectIndustry('洋菓子・パン屋')">洋菓子・パン屋（詳細版）</button>
-<button class="card" onclick="selectIndustry('和菓子')">和菓子（詳細版）</button>
-<button class="card" onclick="selectIndustry('食品加工')">食品加工（詳細版）</button>
-<button class="card" onclick="selectIndustry('牧場（酪農・畜産）')">牧場（酪農・畜産）（詳細版）</button>
-<button class="card" onclick="selectIndustry('競走馬牧場')">競走馬牧場（詳細版）</button>
-<button class="card" onclick="selectIndustry('堆肥場')">堆肥場（詳細版）</button>
-<button class="card" onclick="selectIndustry('米農家・米穀店')">米農家・米穀店（詳細版）</button>
-<button class="card" onclick="selectIndustry('ハウス農家')">ハウス農家（詳細版）</button>
-<button class="card" onclick="selectIndustry('その他農家')">その他農家（詳細版）</button>
-<button class="card" onclick="selectIndustry('漁港・水産業')">漁港・水産業（詳細版）</button>
-<button class="card" onclick="selectIndustry('その他製造業')">その他製造業（詳細版）</button>
-<p class="subhead">簡易版</p>
-<div id="simpleIndustries"></div>
+<button class="card" onclick="selectRestaurant()">飲食店</button>
+<button class="card" onclick="selectIndustry('コインランドリー')">コインランドリー</button>
+<button class="card" onclick="selectIndustry('クリーニング工場')">クリーニング工場</button>
+<button class="card" onclick="selectIndustry('自動車整備工場・ガソリンスタンド')">自動車整備工場・ガソリンスタンド</button>
+<button class="card" onclick="selectIndustry('マンション・ビル・駐車場オーナー')">マンション・ビル・駐車場オーナー</button>
+<button class="card" onclick="selectIndustry('木工')">木工</button>
+<button class="card" onclick="selectIndustry('鉄工・製缶')">鉄工・製缶</button>
+<button class="card" onclick="selectIndustry('金属加工')">金属加工</button>
+<button class="card" onclick="selectIndustry('プラスチック加工')">プラスチック加工</button>
+<button class="card" onclick="selectIndustry('倉庫')">倉庫</button>
+<button class="card" onclick="selectIndustry('洋菓子・パン屋')">洋菓子・パン屋</button>
+<button class="card" onclick="selectIndustry('和菓子')">和菓子</button>
+<button class="card" onclick="selectIndustry('食品加工')">食品加工</button>
+<button class="card" onclick="selectIndustry('牧場（酪農・畜産）')">牧場（酪農・畜産）</button>
+<button class="card" onclick="selectIndustry('競走馬牧場')">競走馬牧場</button>
+<button class="card" onclick="selectIndustry('堆肥場')">堆肥場</button>
+<button class="card" onclick="selectIndustry('米農家・米穀店')">米農家・米穀店</button>
+<button class="card" onclick="selectIndustry('ハウス農家')">ハウス農家</button>
+<button class="card" onclick="selectIndustry('その他農家')">その他農家</button>
+<button class="card" onclick="selectIndustry('漁港・水産業')">漁港・水産業</button>
+<button class="card" onclick="selectIndustry('その他製造業')">その他製造業</button>
 <div class="box">現在、対応業種を順次追加中です。<br>掲載のない業種でも診断できる場合がありますので、お気軽にDMください。</div>
 <p class="note">※この診断は、動力契約ごとに入力してください。</p>
 </section>
@@ -216,9 +213,7 @@ let activeConfig=null;
 let state={industry:"",equipment:[],equipmentQuantities:{},contract:"",capacity:"25",usage:"",fee:"",breaker:"わからない",ampKnown:false,amp:"わからない",cubicle:"わからない",storeNo:1,contractNo:1,records:[]};
 
 function show(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');scrollTo(0,0)}
-function init(){
-  document.getElementById('simpleIndustries').innerHTML=simpleIndustries.map(x=>`<button class="card" onclick="selectSimple('${x}')">${x}（簡易版）</button>`).join('')
-}
+function init(){}
 function selectRestaurant(){selectIndustry('飲食店')}
 function selectSimple(name){
   if(window.industryConfigs && window.industryConfigs[name]){
@@ -255,7 +250,7 @@ function renderEq(){
   const equipment=(activeConfig&&activeConfig.equipment)||[];
 
   if(activeConfig && activeConfig.inputMode === 'quantity'){
-    document.querySelector('#equipment p').textContent='台数を選んでください。10台以上は10台として概算します。';
+    document.querySelector('#equipment p').textContent=activeConfig.quantityNote || '台数を選んでください。';
     equipment.forEach(x=>d.innerHTML+=makeQtyRow(x));
     return;
   }
@@ -330,13 +325,28 @@ function getContractKw(){
 }
 function calcStandard(){
   let total=0,base=0,maxI=0;
-  state.equipment.forEach(n=>{
-    let s=getScore(n);
-    if(!s)return;
-    total+=s[0];
-    if(s[1]==='常時'||s[1]==='半常時')base+=s[0];
-    if(s[1]==='間欠')maxI=Math.max(maxI,s[0])
-  });
+
+  if(activeConfig && activeConfig.inputMode === 'quantity'){
+    const quantities=state.equipmentQuantities || {};
+    Object.keys(quantities).forEach(name=>{
+      const qty=Number(quantities[name]||0);
+      const s=activeConfig&&activeConfig.scores ? activeConfig.scores[name] : null;
+      if(!s || qty<=0)return;
+      const kw=s[0]*qty;
+      total+=kw;
+      if(s[1]==='常時'||s[1]==='半常時')base+=kw;
+      if(s[1]==='間欠')maxI=Math.max(maxI,kw)
+    });
+  } else {
+    state.equipment.forEach(n=>{
+      let s=getScore(n);
+      if(!s)return;
+      total+=s[0];
+      if(s[1]==='常時'||s[1]==='半常時')base+=s[0];
+      if(s[1]==='間欠')maxI=Math.max(maxI,s[0])
+    });
+  }
+
   const contractKw=getContractKw();
   let ref=Math.ceil(Math.max(base,maxI));
   let red=Math.max(0,contractKw-ref);
