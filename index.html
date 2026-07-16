@@ -25,6 +25,7 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 .box{background:#f2f8ff;border-radius:14px;padding:14px;margin-top:16px;line-height:1.8}
 .stars{font-size:34px;color:#ffb000;font-weight:900}
 .hide{display:none}.note{font-size:13px;opacity:.75}.subhead{margin-top:28px;font-weight:900}
+.idbox{background:#fff7d6;border:2px solid #ffb000;border-radius:14px;padding:16px;margin:16px 0;text-align:center}.idvalue{font-size:24px;font-weight:900;letter-spacing:.04em}.secondary{background:#fff;color:#0077ff;border:2px solid #0077ff;margin-top:12px}.success{background:#effff3;border:1px solid #9bd9aa;border-radius:14px;padding:14px;margin-top:16px}
 </style>
 </head>
 <body>
@@ -41,28 +42,31 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 <section id="industry" class="section">
 <h2>業種を選んでください</h2>
 <p>まずは診断したい店舗・施設に近い業種を選んでください。</p>
-<button class="card" onclick="selectRestaurant()">飲食店</button>
-<button class="card" onclick="selectIndustry('コインランドリー')">コインランドリー</button>
-<button class="card" onclick="selectIndustry('クリーニング工場')">クリーニング工場</button>
-<button class="card" onclick="selectIndustry('自動車整備工場・ガソリンスタンド')">自動車整備工場・ガソリンスタンド</button>
-<button class="card" onclick="selectIndustry('マンション・ビル・駐車場オーナー')">マンション・ビル・駐車場オーナー</button>
-<button class="card" onclick="selectIndustry('木工')">木工</button>
-<button class="card" onclick="selectIndustry('鉄工・製缶')">鉄工・製缶</button>
-<button class="card" onclick="selectIndustry('金属加工')">金属加工</button>
-<button class="card" onclick="selectIndustry('プラスチック加工')">プラスチック加工</button>
-<button class="card" onclick="selectIndustry('倉庫')">倉庫</button>
-<button class="card" onclick="selectIndustry('洋菓子・パン屋')">洋菓子・パン屋</button>
-<button class="card" onclick="selectIndustry('和菓子')">和菓子</button>
-<button class="card" onclick="selectIndustry('食品加工')">食品加工</button>
-<button class="card" onclick="selectIndustry('牧場（酪農・畜産）')">牧場（酪農・畜産）</button>
-<button class="card" onclick="selectIndustry('競走馬牧場')">競走馬牧場</button>
-<button class="card" onclick="selectIndustry('堆肥場')">堆肥場</button>
-<button class="card" onclick="selectIndustry('米農家・米穀店')">米農家・米穀店</button>
-<button class="card" onclick="selectIndustry('ハウス農家')">ハウス農家</button>
-<button class="card" onclick="selectIndustry('その他農家')">その他農家</button>
-<button class="card" onclick="selectIndustry('漁港・水産業')">漁港・水産業</button>
-<button class="card" onclick="selectIndustry('その他製造業')">その他製造業</button>
-
+<p class="subhead">詳細版</p>
+<button class="card" onclick="selectRestaurant()">飲食店（詳細版）</button>
+<button class="card" onclick="selectIndustry('コインランドリー')">コインランドリー（詳細版）</button>
+<button class="card" onclick="selectIndustry('クリーニング工場')">クリーニング工場（詳細版）</button>
+<button class="card" onclick="selectIndustry('自動車整備工場・ガソリンスタンド')">自動車整備工場・ガソリンスタンド（詳細版）</button>
+<button class="card" onclick="selectIndustry('マンション・ビル・駐車場オーナー')">マンション・ビル・駐車場オーナー（詳細版）</button>
+<button class="card" onclick="selectIndustry('木工')">木工（詳細版）</button>
+<button class="card" onclick="selectIndustry('鉄工・製缶')">鉄工・製缶（詳細版）</button>
+<button class="card" onclick="selectIndustry('金属加工')">金属加工（詳細版）</button>
+<button class="card" onclick="selectIndustry('プラスチック加工')">プラスチック加工（詳細版）</button>
+<button class="card" onclick="selectIndustry('倉庫')">倉庫（詳細版）</button>
+<button class="card" onclick="selectIndustry('洋菓子・パン屋')">洋菓子・パン屋（詳細版）</button>
+<button class="card" onclick="selectIndustry('和菓子')">和菓子（詳細版）</button>
+<button class="card" onclick="selectIndustry('食品加工')">食品加工（詳細版）</button>
+<button class="card" onclick="selectIndustry('牧場（酪農・畜産）')">牧場（酪農・畜産）（詳細版）</button>
+<button class="card" onclick="selectIndustry('競走馬牧場')">競走馬牧場（詳細版）</button>
+<button class="card" onclick="selectIndustry('堆肥場')">堆肥場（詳細版）</button>
+<button class="card" onclick="selectIndustry('米農家・米穀店')">米農家・米穀店（詳細版）</button>
+<button class="card" onclick="selectIndustry('ハウス農家')">ハウス農家（詳細版）</button>
+<button class="card" onclick="selectIndustry('その他農家')">その他農家（詳細版）</button>
+<button class="card" onclick="selectIndustry('漁港・水産業')">漁港・水産業（詳細版）</button>
+<button class="card" onclick="selectIndustry('その他製造業')">その他製造業（詳細版）</button>
+<p class="subhead">簡易版</p>
+<div id="simpleIndustries"></div>
+<div class="box">現在、対応業種を順次追加中です。<br>掲載のない業種でも診断できる場合がありますので、お気軽にDMください。</div>
 <p class="note">※この診断は、動力契約ごとに入力してください。</p>
 </section>
 
@@ -160,7 +164,7 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 <section id="unknown" class="section">
 <h2>契約内容の確認が必要です</h2>
 <div class="box">契約内容が特殊、または不明な可能性があります。<br>詳細を確認できれば診断できる場合があります。<br><br>お気軽に「その他契約」とDMください。</div>
-<a class="btn main" href="https://x.com/messages" target="_blank">Xで相談する</a>
+<a class="btn main" href="https://x.com/messages/compose?recipient_id=2042443170596745408" target="_blank">Xで相談する</a>
 <button class="back" onclick="show('contract')">← 契約種別に戻る</button>
 </section>
 
@@ -177,6 +181,29 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 <button class="main" onclick="requestDiagnosis('Web詳細診断のみ')">Webで詳細診断のみを依頼する</button>
 <button class="back" onclick="endDiagnosis()">終了する</button>
 <button class="back" onclick="show('contract')">← 入力内容を修正する</button>
+</section>
+
+<section id="dmGuide" class="section">
+<h2>診断内容をコピーしました。</h2>
+<div class="idbox">
+<div>診断ID</div>
+<div id="dmDiagnosisId" class="idvalue">----</div>
+</div>
+<p>DMが送れない場合に備え、診断IDをお控えください。</p>
+<p>XのDM画面を開き、コピーした内容を貼り付けて送信してください。</p>
+<button class="main" onclick="openDmCompose()">DMを開く</button>
+<div class="box">
+<h2 style="font-size:20px;margin-top:0">💡DMが送れない場合</h2>
+<p>電話番号をご入力いただければ、こちらからご連絡いたします。</p>
+<p><b>診断ID</b><br><span id="fallbackDiagnosisId">----</span></p>
+<p><b>電話番号（必須）</b></p>
+<input id="fallbackPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="例：09012345678">
+<p><b>連絡希望時間（任意）</b></p>
+<input id="fallbackTime" type="text" placeholder="例：平日18時以降">
+<button id="fallbackSubmit" class="main" onclick="submitPhoneFallback()">送信</button>
+<div id="fallbackResult" class="success hide"></div>
+</div>
+<button class="back" onclick="show('result')">← 診断結果に戻る</button>
 </section>
 
 <section id="endResult" class="section">
@@ -210,10 +237,12 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 <script>
 const simpleIndustries=[];
 let activeConfig=null;
-let state={industry:"",equipment:[],equipmentQuantities:{},contract:"",capacity:"25",usage:"",fee:"",breaker:"わからない",ampKnown:false,amp:"わからない",cubicle:"わからない",storeNo:1,contractNo:1,records:[]};
+let state={industry:"",equipment:[],equipmentQuantities:{},contract:"",capacity:"25",usage:"",fee:"",breaker:"わからない",ampKnown:false,amp:"わからない",cubicle:"わからない",storeNo:1,contractNo:1,records:[],currentDiagnosisId:"",currentRequestType:""};
 
 function show(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');scrollTo(0,0)}
-function init(){}
+function init(){
+  document.getElementById('simpleIndustries').innerHTML=simpleIndustries.map(x=>`<button class="card" onclick="selectSimple('${x}')">${x}（簡易版）</button>`).join('')
+}
 function selectRestaurant(){selectIndustry('飲食店')}
 function selectSimple(name){
   if(window.industryConfigs && window.industryConfigs[name]){
@@ -250,7 +279,7 @@ function renderEq(){
   const equipment=(activeConfig&&activeConfig.equipment)||[];
 
   if(activeConfig && activeConfig.inputMode === 'quantity'){
-    document.querySelector('#equipment p').textContent=activeConfig.quantityNote || '台数を選んでください。';
+    document.querySelector('#equipment p').textContent='台数を選んでください。10台以上は10台として概算します。';
     equipment.forEach(x=>d.innerHTML+=makeQtyRow(x));
     return;
   }
@@ -325,28 +354,13 @@ function getContractKw(){
 }
 function calcStandard(){
   let total=0,base=0,maxI=0;
-
-  if(activeConfig && activeConfig.inputMode === 'quantity'){
-    const quantities=state.equipmentQuantities || {};
-    Object.keys(quantities).forEach(name=>{
-      const qty=Number(quantities[name]||0);
-      const s=activeConfig&&activeConfig.scores ? activeConfig.scores[name] : null;
-      if(!s || qty<=0)return;
-      const kw=s[0]*qty;
-      total+=kw;
-      if(s[1]==='常時'||s[1]==='半常時')base+=kw;
-      if(s[1]==='間欠')maxI=Math.max(maxI,kw)
-    });
-  } else {
-    state.equipment.forEach(n=>{
-      let s=getScore(n);
-      if(!s)return;
-      total+=s[0];
-      if(s[1]==='常時'||s[1]==='半常時')base+=s[0];
-      if(s[1]==='間欠')maxI=Math.max(maxI,s[0])
-    });
-  }
-
+  state.equipment.forEach(n=>{
+    let s=getScore(n);
+    if(!s)return;
+    total+=s[0];
+    if(s[1]==='常時'||s[1]==='半常時')base+=s[0];
+    if(s[1]==='間欠')maxI=Math.max(maxI,s[0])
+  });
   const contractKw=getContractKw();
   let ref=Math.ceil(Math.max(base,maxI));
   let red=Math.max(0,contractKw-ref);
@@ -517,10 +531,85 @@ async function requestDiagnosis(requestType){
   const minTotal = state.records.reduce((sum,r)=>sum+(r.minMonthly||0),0);
   const maxTotal = state.records.reduce((sum,r)=>sum+(r.maxMonthly||0),0);
   const dmText = buildDmText(diagnosisId, minTotal, maxTotal, requestType);
+
+  state.currentDiagnosisId = diagnosisId;
+  state.currentRequestType = requestType;
+
   await sendToChat(diagnosisId, requestType);
-  await copyText(dmText);
-  alert('診断データを送信しました\nID: '+diagnosisId+'\nDM文をコピーしました');
-  window.open('https://x.com/breaker_check', '_blank');
+  const copied = await copyText(dmText);
+
+  document.getElementById('dmDiagnosisId').textContent = diagnosisId;
+  document.getElementById('fallbackDiagnosisId').textContent = diagnosisId;
+  document.getElementById('fallbackPhone').value = '';
+  document.getElementById('fallbackTime').value = '';
+  document.getElementById('fallbackResult').classList.add('hide');
+  document.getElementById('fallbackResult').textContent = '';
+  document.getElementById('fallbackSubmit').disabled = false;
+  document.getElementById('fallbackSubmit').textContent = '送信';
+
+  if(!copied){
+    alert('DM文を自動コピーできませんでした。DM画面で診断IDをお知らせください。');
+  }
+  show('dmGuide');
+}
+
+function openDmCompose(){
+  window.open('https://x.com/messages/compose?recipient_id=2042443170596745408', '_blank');
+}
+
+async function submitPhoneFallback(){
+  const phoneInput = document.getElementById('fallbackPhone');
+  const timeInput = document.getElementById('fallbackTime');
+  const resultBox = document.getElementById('fallbackResult');
+  const submitButton = document.getElementById('fallbackSubmit');
+  const phone = phoneInput.value.trim();
+  const preferredTime = timeInput.value.trim();
+  const digits = phone.replace(/[^0-9]/g, '');
+
+  if(digits.length < 10 || digits.length > 11){
+    alert('電話番号を10桁または11桁で入力してください。');
+    phoneInput.focus();
+    return;
+  }
+
+  submitButton.disabled = true;
+  submitButton.textContent = '送信中…';
+
+  const minTotal = state.records.reduce((sum,r)=>sum+(r.minMonthly||0),0);
+  const maxTotal = state.records.reduce((sum,r)=>sum+(r.maxMonthly||0),0);
+  const diagnosisId = state.currentDiagnosisId || makeDiagnosisId();
+  const payload = {
+    eventType: 'phoneFallback',
+    diagnosisId,
+    requestType: state.currentRequestType || '',
+    phone: digits,
+    preferredTime,
+    records: state.records,
+    result: {
+      minMonthly: minTotal,
+      maxMonthly: maxTotal,
+      min7y: minTotal * 84,
+      max7y: maxTotal * 84
+    }
+  };
+
+  try{
+    const response = await fetch('https://plain-wind-57e1.neocorporation-murakami.workers.dev/',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    if(!response.ok) throw new Error('HTTP '+response.status);
+
+    resultBox.innerHTML = '<b>受付が完了しました。</b><br>診断ID：'+diagnosisId+'<br>担当者より順次ご連絡いたします。';
+    resultBox.classList.remove('hide');
+    submitButton.textContent = '送信済み';
+  }catch(e){
+    console.error(e);
+    alert('送信できませんでした。時間をおいてもう一度お試しください。診断ID：'+diagnosisId);
+    submitButton.disabled = false;
+    submitButton.textContent = '送信';
+  }
 }
 
 function endDiagnosis(){
@@ -528,7 +617,7 @@ function endDiagnosis(){
 }
 
 function restartDiagnosis(){
-  state={industry:"",equipment:[],equipmentQuantities:{},contract:"",capacity:"25",usage:"",fee:"",breaker:"わからない",ampKnown:false,amp:"わからない",cubicle:"わからない",storeNo:1,contractNo:1,records:[]};
+  state={industry:"",equipment:[],equipmentQuantities:{},contract:"",capacity:"25",usage:"",fee:"",breaker:"わからない",ampKnown:false,amp:"わからない",cubicle:"わからない",storeNo:1,contractNo:1,records:[],currentDiagnosisId:"",currentRequestType:""};
   activeConfig=null;
   document.getElementById('cap').value=25;
   setCap('25');
@@ -561,7 +650,7 @@ async function finishDiagnosis(openDm=false, fixedDiagnosisId=null){
     "<b>参考サンプル削減7年総額 合計</b><br>" +
     yen(minTotal * 84) + "〜" + yen(maxTotal * 84) + "<br><br><span class=\"note\">※表示金額は、手数料・諸費用等を差し引いた後に手元に残る標準的な参考値です。</span>";
   show("finalResult");
-  if(openDm){ window.open("https://x.com/breaker_check", "_blank"); }
+  if(openDm){ openDmCompose(); }
 }
 
 function result(){
