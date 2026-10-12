@@ -163,7 +163,7 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 <section id="unknown" class="section">
 <h2>契約内容の確認が必要です</h2>
 <div class="box">契約内容が特殊、または不明な可能性があります。<br>詳細を確認できれば診断できる場合があります。<br><br>お気軽に「その他契約」とDMください。</div>
-<a class="btn main" href="https://x.com/messages/compose?recipient_id=2042443170596745408" target="_blank">Xで相談する</a>
+<a class="btn main" href="https://x.com/breaker_check" target="_blank">ブレーカーチェックのXを開く（DMを選択）</a>
 <button class="back" onclick="show('contract')">← 契約種別に戻る</button>
 </section>
 
@@ -171,7 +171,7 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 <h2>診断結果</h2>
 <div class="box"><p>削減可能性</p><div id="stars" class="stars">★★★★☆</div><p id="rtxt">入力内容を確認しました。</p></div>
 <div id="summary" class="box"></div>
-<p><b>実際に削減したい方は</b></p>
+
 <button class="main" onclick="show('requestChoice')">次へ</button>
 <div class="result-other">
 <b>その他の操作</b>
@@ -183,11 +183,10 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 </section>
 
 <section id="requestChoice" class="section">
-<h2>詳細診断のお申し込み</h2>
-<p>ご希望の方法を選んでください。</p>
-<button class="main" onclick="requestDiagnosis('現地詳細診断＋削減')">現地詳細診断＋削減を依頼する</button>
-<button class="card" onclick="requestDiagnosis('Web詳細診断のみ')">Webで詳細診断のみを依頼する</button>
-<button class="back" onclick="show('result')">← 診断結果に戻る</button>
+<h2>専門業者のご案内</h2>
+<p>電力会社を変えずに、基本料金を削減申請</p>
+<button class="main" onclick="requestDiagnosis('専門業者の紹介')">次へ →</button>
+<button class="back" onclick="show('result')">← 前の画面に戻る</button>
 </section>
 
 <section id="dmGuide" class="section">
@@ -201,7 +200,7 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 <div id="dmDiagnosisId" class="idvalue">----</div>
 </div>
 <p>DMが送れない場合に備え、診断IDをお控えください。</p>
-<p>コピー後、XのDM画面を開いて貼り付けてください。</p>
+<p>「DMを開く」を押すと診断内容の自動コピーを試み、ブレーカーチェック宛のDMを開きます。DM画面で貼り付けて送信してください。</p>
 <button class="main" onclick="openDmCompose()">DMを開く</button>
 <div class="box">
 <h2 style="font-size:20px;margin-top:0">💡DMが送れない場合</h2>
@@ -447,11 +446,13 @@ function resetForNextContract(){
   state.cubicle = "わからない";
 }
 function sameStoreContract(){
+  state.currentDiagnosisId = "";
   state.contractNo += 1;
   resetForNextContract();
   show("contract");
 }
 function newStoreContract(){
+  state.currentDiagnosisId = "";
   state.storeNo += 1;
   state.contractNo = 1;
   resetForNextContract();
@@ -491,19 +492,18 @@ async function sendToChat(diagnosisId, requestType=''){
 }
 
 function makeDiagnosisId(){
-  const now = new Date();
-  const mm = String(now.getMonth() + 1).padStart(2, "0");
-  const dd = String(now.getDate()).padStart(2, "0");
-  const hh = String(now.getHours()).padStart(2, "0");
-  const mi = String(now.getMinutes()).padStart(2, "0");
-  const ss = String(now.getSeconds()).padStart(2, "0");
-  return mm + dd + "-" + hh + mi + "-" + ss;
+  // Short, readable ID. Timestamp plus random digits reduces accidental duplication.
+  const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const bytes=new Uint8Array(6);
+  if(window.crypto && crypto.getRandomValues) crypto.getRandomValues(bytes);
+  else for(let i=0;i<6;i++)bytes[i]=Math.floor(Math.random()*256);
+  return 'BC-'+Array.from(bytes,b=>alphabet[b%alphabet.length]).join('');
 }
 
 function buildDmText(id, minTotal, maxTotal, requestType=''){
   const stores = new Set(state.records.map(r => r.storeNo));
   const industries = [...new Set(state.records.map(r => r.industry).filter(Boolean))].join("、") || "未選択";
-  const equipmentList = [...new Set(state.records.flatMap(r => r.equipment || []))].join("、") || "簡易版・未選択";
+  const equipmentList = [...new Set(state.records.flatMap(r => r.equipment || []))].join("、") || "未選択";
 
   return [
     requestType ? "診断希望（" + requestType + "）" : "診断希望",
@@ -557,29 +557,43 @@ function copyDmMessage(){
 }
 
 function requestDiagnosis(requestType){
-  const diagnosisId = makeDiagnosisId();
-  const minTotal = state.records.reduce((sum,r)=>sum+(r.minMonthly||0),0);
-  const maxTotal = state.records.reduce((sum,r)=>sum+(r.maxMonthly||0),0);
-  const dmText = buildDmText(diagnosisId, minTotal, maxTotal, requestType);
+  const diagnosisId = state.currentDiagnosisId || makeDiagnosisId();
   state.currentDiagnosisId = diagnosisId;
   state.currentRequestType = requestType;
+  const minTotal = state.records.reduce((sum,r)=>sum+(r.minMonthly||0),0);
+  const maxTotal = state.records.reduce((sum,r)=>sum+(r.maxMonthly||0),0);
+  const dmText = '診断ID（'+diagnosisId+'）を送信→';
   document.getElementById('dmMessage').value = dmText;
-  document.getElementById('dmCopyStatus').textContent = '「診断内容をコピーする」を押してください。';
   document.getElementById('dmDiagnosisId').textContent = diagnosisId;
   document.getElementById('fallbackDiagnosisId').textContent = diagnosisId;
-  document.getElementById('fallbackPhone').value = '';
-  document.getElementById('fallbackTime').value = '';
-  document.getElementById('fallbackResult').classList.add('hide');
-  document.getElementById('fallbackResult').textContent = '';
-  document.getElementById('fallbackSubmit').disabled = false;
-  document.getElementById('fallbackSubmit').textContent = '送信';
-  show('dmGuide');
-  // Report analytics independently; never block the customer DM flow.
+  // Keep sending the diagnosis details to the existing webhook.
+  // The webhook's persistence and ID lookup must be confirmed separately.
   sendToChat(diagnosisId, requestType).catch(e=>console.error(e));
+  const url='https://x.com/messages/compose?recipient_id=2042440534195679233&text='+encodeURIComponent(dmText);
+  window.location.href=url;
 }
 
 function openDmCompose(){
-  window.open('https://x.com/messages/compose?recipient_id=2042443170596745408', '_blank');
+  const field = document.getElementById('dmMessage');
+  const text = field.value;
+  const status = document.getElementById('dmCopyStatus');
+  // Open immediately within the user gesture so mobile browsers don't block it.
+  const url = 'https://x.com/messages/compose?recipient_id=2042440534195679233';
+  const popup = window.open(url, '_blank');
+  if (!popup) window.location.href = url;
+  // Clipboard operations may be rejected depending on browser/app permissions.
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => {
+      status.textContent = '診断内容をコピーしました。DM画面で貼り付けて送信してください。';
+    }).catch(() => {
+      status.textContent = '自動コピーできませんでした。「診断内容をコピーする」を押してください。';
+    });
+  } else {
+    field.focus(); field.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch(e) {}
+    status.textContent = ok ? '診断内容をコピーしました。DM画面で貼り付けて送信してください。' : '自動コピーできませんでした。「診断内容をコピーする」を押してください。';
+  }
 }
 
 async function submitPhoneFallback(){
@@ -657,7 +671,7 @@ async function finishDiagnosis(openDm=false, fixedDiagnosisId=null){
     return "店舗" + r.storeNo + "・契約" + r.contractNo + "<br>" +
       "業種：" + r.industry + "<br>" +
       "契約種別：" + r.contract + "<br>" +
-      "設備：" + (r.equipment.length ? r.equipment.join("、") : "簡易版・未選択") + "<br>";
+      "設備：" + (r.equipment.length ? r.equipment.join("、") : "未選択") + "<br>";
   }).join("<hr>");
   const diagnosisId = fixedDiagnosisId || makeDiagnosisId();
   const dmText = buildDmText(diagnosisId, minTotal, maxTotal);
@@ -726,7 +740,7 @@ function result(){
   extra='契約容量：'+state.capacity+(state.capacity==='50kW以上'?'':'kW')+'<br>月使用量：'+(state.usage||'未入力')+'kWh<br>月額料金：'+(state.fee||'未入力')+'円<br>主幹ブレーカー：'+state.breaker+'<br>主幹ブレーカーのアンペア：'+(state.ampKnown?state.amp+'A':'わからない')+'<br>';
   document.getElementById('stars').textContent=r.stars;
   document.getElementById('rtxt').textContent='入力内容を確認しました。詳細診断でより正確に確認できます。';
-  document.getElementById('summary').innerHTML='<b>入力内容</b><br>店舗：店舗'+state.storeNo+'<br>契約：契約'+state.contractNo+'<br>業種：'+state.industry+'<br>設備：'+(state.equipment.join('、')||'簡易版・未選択')+'<br>契約種別：'+state.contract+'<br>'+extra+'<br><b>参考サンプル削減月額</b><br>'+yen(r.min)+'〜'+yen(r.max)+'<br><br><b>参考サンプル削減7年総額</b><br>'+yen(r.min*84)+'〜'+yen(r.max*84)+'<br><br><span class="note">※表示金額は、手数料・諸費用等を差し引いた後に手元に残る標準的な参考値です。</span>';
+  document.getElementById('summary').innerHTML='<b>入力内容</b><br>店舗：店舗'+state.storeNo+'<br>契約：契約'+state.contractNo+'<br>業種：'+state.industry+'<br>設備：'+(state.equipment.join('、')||'未選択')+'<br>契約種別：'+state.contract+'<br>'+extra+'<br><b>参考サンプル削減月額</b><br>'+yen(r.min)+'〜'+yen(r.max)+'<br><br><b>参考サンプル削減7年総額</b><br>'+yen(r.min*84)+'〜'+yen(r.max*84)+'<br><br><span class="note">※表示金額は、手数料・諸費用等を差し引いた後に手元に残る標準的な参考値です。</span>';
   saveCurrentRecord(r, extra);
   show('result');
 }
