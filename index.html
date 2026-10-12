@@ -26,6 +26,7 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 .stars{font-size:34px;color:#ffb000;font-weight:900}
 .hide{display:none}.note{font-size:13px;opacity:.75}.subhead{margin-top:28px;font-weight:900}
 .idbox{background:#fff7d6;border:2px solid #ffb000;border-radius:14px;padding:16px;margin:16px 0;text-align:center}.idvalue{font-size:24px;font-weight:900;letter-spacing:.04em}.secondary{background:#fff;color:#0077ff;border:2px solid #0077ff;margin-top:12px}.success{background:#effff3;border:1px solid #9bd9aa;border-radius:14px;padding:14px;margin-top:16px}
+.contract-option{margin:14px 0}.result-other{margin-top:30px;padding:16px;border:1px solid #d6e4f0;border-radius:14px;background:#fff}
 </style>
 </head>
 <body>
@@ -42,29 +43,27 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 <section id="industry" class="section">
 <h2>業種を選んでください</h2>
 <p>まずは診断したい店舗・施設に近い業種を選んでください。</p>
-<p class="subhead">詳細版</p>
-<button class="card" onclick="selectRestaurant()">飲食店（詳細版）</button>
-<button class="card" onclick="selectIndustry('コインランドリー')">コインランドリー（詳細版）</button>
-<button class="card" onclick="selectIndustry('クリーニング工場')">クリーニング工場（詳細版）</button>
-<button class="card" onclick="selectIndustry('自動車整備工場・ガソリンスタンド')">自動車整備工場・ガソリンスタンド（詳細版）</button>
-<button class="card" onclick="selectIndustry('マンション・ビル・駐車場オーナー')">マンション・ビル・駐車場オーナー（詳細版）</button>
-<button class="card" onclick="selectIndustry('木工')">木工（詳細版）</button>
-<button class="card" onclick="selectIndustry('鉄工・製缶')">鉄工・製缶（詳細版）</button>
-<button class="card" onclick="selectIndustry('金属加工')">金属加工（詳細版）</button>
-<button class="card" onclick="selectIndustry('プラスチック加工')">プラスチック加工（詳細版）</button>
-<button class="card" onclick="selectIndustry('倉庫')">倉庫（詳細版）</button>
-<button class="card" onclick="selectIndustry('洋菓子・パン屋')">洋菓子・パン屋（詳細版）</button>
-<button class="card" onclick="selectIndustry('和菓子')">和菓子（詳細版）</button>
-<button class="card" onclick="selectIndustry('食品加工')">食品加工（詳細版）</button>
-<button class="card" onclick="selectIndustry('牧場（酪農・畜産）')">牧場（酪農・畜産）（詳細版）</button>
-<button class="card" onclick="selectIndustry('競走馬牧場')">競走馬牧場（詳細版）</button>
-<button class="card" onclick="selectIndustry('堆肥場')">堆肥場（詳細版）</button>
-<button class="card" onclick="selectIndustry('米農家・米穀店')">米農家・米穀店（詳細版）</button>
-<button class="card" onclick="selectIndustry('ハウス農家')">ハウス農家（詳細版）</button>
-<button class="card" onclick="selectIndustry('その他農家')">その他農家（詳細版）</button>
-<button class="card" onclick="selectIndustry('漁港・水産業')">漁港・水産業（詳細版）</button>
-<button class="card" onclick="selectIndustry('その他製造業')">その他製造業（詳細版）</button>
-<p class="subhead">簡易版</p>
+<button class="card" onclick="selectRestaurant()">飲食店</button>
+<button class="card" onclick="selectIndustry('コインランドリー')">コインランドリー</button>
+<button class="card" onclick="selectIndustry('クリーニング工場')">クリーニング工場</button>
+<button class="card" onclick="selectIndustry('自動車整備工場・ガソリンスタンド')">自動車整備工場・ガソリンスタンド</button>
+<button class="card" onclick="selectIndustry('マンション・ビル・駐車場オーナー')">マンション・ビル・駐車場オーナー</button>
+<button class="card" onclick="selectIndustry('木工')">木工</button>
+<button class="card" onclick="selectIndustry('鉄工・製缶')">鉄工・製缶</button>
+<button class="card" onclick="selectIndustry('金属加工')">金属加工</button>
+<button class="card" onclick="selectIndustry('プラスチック加工')">プラスチック加工</button>
+<button class="card" onclick="selectIndustry('倉庫')">倉庫</button>
+<button class="card" onclick="selectIndustry('洋菓子・パン屋')">洋菓子・パン屋</button>
+<button class="card" onclick="selectIndustry('和菓子')">和菓子</button>
+<button class="card" onclick="selectIndustry('食品加工')">食品加工</button>
+<button class="card" onclick="selectIndustry('牧場（酪農・畜産）')">牧場（酪農・畜産）</button>
+<button class="card" onclick="selectIndustry('競走馬牧場')">競走馬牧場</button>
+<button class="card" onclick="selectIndustry('堆肥場')">堆肥場</button>
+<button class="card" onclick="selectIndustry('米農家・米穀店')">米農家・米穀店</button>
+<button class="card" onclick="selectIndustry('ハウス農家')">ハウス農家</button>
+<button class="card" onclick="selectIndustry('その他農家')">その他農家</button>
+<button class="card" onclick="selectIndustry('漁港・水産業')">漁港・水産業</button>
+<button class="card" onclick="selectIndustry('その他製造業')">その他製造業</button>
 <div id="simpleIndustries"></div>
 <div class="box">現在、対応業種を順次追加中です。<br>掲載のない業種でも診断できる場合がありますので、お気軽にDMください。</div>
 <p class="note">※この診断は、動力契約ごとに入力してください。</p>
@@ -80,11 +79,11 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 
 <section id="contract" class="section">
 <h2>診断したい契約を選んでください</h2>
-<button class="card" onclick="setContract('低圧動力（三相200V）')">低圧動力（三相200V）</button>
-<button class="card" onclick="setContract('高圧')">高圧</button>
-<button class="card" onclick="setContract('電灯（アンペア契約）')">電灯（アンペア契約）</button>
-<button class="card" onclick="setContract('電灯（kVA契約）')">電灯（kVA契約）</button>
-<button class="card" onclick="setContract('その他・わからない')">その他・わからない</button>
+<button class="card contract-option" onclick="setContract('低圧動力（三相200V）')">低圧・動力（三相200V）</button>
+<button class="card contract-option" onclick="setContract('電灯（アンペア契約）')">電灯（100V・アンペア契約）</button>
+<button class="card contract-option" onclick="setContract('電灯（kVA契約）')">電灯（100V・kVA契約）</button>
+<button class="card contract-option" onclick="setContract('高圧')">高圧</button>
+<button class="card contract-option" onclick="setContract('その他・わからない')">その他・わからない</button>
 <button class="back" onclick="show('equipment')">← 設備選択に戻る</button>
 </section>
 
@@ -120,7 +119,7 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 <button id="ampU" class="card selected" onclick="ampUnknown()">わからない</button>
 <button id="ampK" class="card" onclick="ampKnown()">アンペアがわかる</button>
 <div id="ampp" class="hide"><div class="big"><span id="ampv">125</span>A</div><input id="amp" type="range" min="3" max="251" value="125" oninput="setAmp(this.value)"><p class="note">3A〜251A以上</p></div></div>
-<button class="main" onclick="result()">診断結果を見る</button>
+<button class="main" onclick="result()">次へ</button>
 <button class="back" onclick="show('usageSection')">← 使用量と料金に戻る</button>
 </section>
 
@@ -134,7 +133,7 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 <p><b>最大デマンド（kW）</b></p><input id="hvDemand" type="number" min="0" max="9999" placeholder="例：62">
 <p><b>月使用量（kWh）</b></p><input id="hvUsage" type="number" min="0" max="999999" placeholder="例：18000">
 <p><b>月額電気料金（円）</b></p><input id="hvFee" type="number" min="0" max="9999999" placeholder="例：520000">
-<button class="main" onclick="result()">診断結果を見る</button>
+<button class="main" onclick="result()">次へ</button>
 <button class="back" onclick="show('contract')">← 契約種別に戻る</button>
 </section>
 
@@ -145,7 +144,7 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 <input id="lightARange" type="range" min="10" max="90" step="10" value="50" oninput="setLightA(this.value)">
 <p><b>月使用量（kWh）</b></p><input id="lightAUsage" type="number" min="0" max="9999" placeholder="例：350">
 <p><b>月額電気料金（円）</b></p><input id="lightAFee" type="number" min="0" max="999999" placeholder="例：18000">
-<button class="main" onclick="result()">診断結果を見る</button>
+<button class="main" onclick="result()">次へ</button>
 <button class="back" onclick="show('contract')">← 契約種別に戻る</button>
 </section>
 
@@ -157,7 +156,7 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 <button id="over100kva" class="card" onclick="setKva('100kVA以上')">100kVA以上</button>
 <p><b>月使用量（kWh）</b></p><input id="kvaUsage" type="number" min="0" max="99999" placeholder="例：2500">
 <p><b>月額電気料金（円）</b></p><input id="kvaFee" type="number" min="0" max="999999" placeholder="例：85000">
-<button class="main" onclick="result()">診断結果を見る</button>
+<button class="main" onclick="result()">次へ</button>
 <button class="back" onclick="show('contract')">← 契約種別に戻る</button>
 </section>
 
@@ -172,15 +171,23 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 <h2>診断結果</h2>
 <div class="box"><p>削減可能性</p><div id="stars" class="stars">★★★★☆</div><p id="rtxt">入力内容を確認しました。</p></div>
 <div id="summary" class="box"></div>
-<div class="box">
-<b>他に診断したい契約はありますか？</b><br>
+<p><b>実際に削減したい方は</b></p>
+<button class="main" onclick="show('requestChoice')">次へ</button>
+<div class="result-other">
+<b>その他の操作</b>
 <button class="card" onclick="sameStoreContract()">同じ店舗の別契約</button>
 <button class="card" onclick="newStoreContract()">別店舗を診断する</button>
-</div>
-<button class="main" onclick="requestDiagnosis('現地詳細診断＋削減')">現地詳細診断＋削減を依頼する</button>
-<button class="main" onclick="requestDiagnosis('Web詳細診断のみ')">Webで詳細診断のみを依頼する</button>
-<button class="back" onclick="endDiagnosis()">終了する</button>
 <button class="back" onclick="show('contract')">← 入力内容を修正する</button>
+<button class="back" onclick="endDiagnosis()">終了する</button>
+</div>
+</section>
+
+<section id="requestChoice" class="section">
+<h2>詳細診断のお申し込み</h2>
+<p>ご希望の方法を選んでください。</p>
+<button class="main" onclick="requestDiagnosis('現地詳細診断＋削減')">現地詳細診断＋削減を依頼する</button>
+<button class="card" onclick="requestDiagnosis('Web詳細診断のみ')">Webで詳細診断のみを依頼する</button>
+<button class="back" onclick="show('result')">← 診断結果に戻る</button>
 </section>
 
 <section id="dmGuide" class="section">
@@ -241,7 +248,7 @@ let state={industry:"",equipment:[],equipmentQuantities:{},contract:"",capacity:
 
 function show(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');scrollTo(0,0)}
 function init(){
-  document.getElementById('simpleIndustries').innerHTML=simpleIndustries.map(x=>`<button class="card" onclick="selectSimple('${x}')">${x}（簡易版）</button>`).join('')
+  document.getElementById('simpleIndustries').innerHTML=simpleIndustries.map(x=>`<button class="card" onclick="selectSimple('${x}')">${x}</button>`).join('')
 }
 function selectRestaurant(){selectIndustry('飲食店')}
 function selectSimple(name){
@@ -252,7 +259,7 @@ function selectSimple(name){
   state.industry=name;
   activeConfig=null;
   document.getElementById('eqTitle').textContent=name+'の設備を選んでください';
-  document.getElementById('eq').innerHTML='<div class="box">簡易版では、設備詳細はDM診断時に確認します。<br>このまま契約種別の入力へ進んでください。</div>';
+  document.getElementById('eq').innerHTML='<div class="box">設備詳細はDM診断時に確認します。<br>このまま契約種別の入力へ進んでください。</div>';
   show('equipment')
 }
 function selectIndustry(name){
