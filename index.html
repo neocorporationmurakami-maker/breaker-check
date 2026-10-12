@@ -191,13 +191,17 @@ input[type=number]{width:100%;box-sizing:border-box;border:1px solid #d6e4f0;bor
 </section>
 
 <section id="dmGuide" class="section">
-<h2>診断内容をコピーしました。</h2>
+<h2>診断内容をXで送信</h2>
+<p>下の文章をコピーし、XのDMに貼り付けて送信してください。</p>
+<textarea id="dmMessage" readonly aria-label="送信用DM文章" style="box-sizing:border-box;width:100%;min-height:220px;border:1px solid #d6e4f0;border-radius:12px;padding:12px;font-size:15px;line-height:1.5"></textarea>
+<button class="main" onclick="copyDmMessage()">診断内容をコピーする</button>
+<p id="dmCopyStatus" role="status"></p>
 <div class="idbox">
 <div>診断ID</div>
 <div id="dmDiagnosisId" class="idvalue">----</div>
 </div>
 <p>DMが送れない場合に備え、診断IDをお控えください。</p>
-<p>XのDM画面を開き、コピーした内容を貼り付けて送信してください。</p>
+<p>コピー後、XのDM画面を開いて貼り付けてください。</p>
 <button class="main" onclick="openDmCompose()">DMを開く</button>
 <div class="box">
 <h2 style="font-size:20px;margin-top:0">💡DMが送れない場合</h2>
@@ -533,18 +537,34 @@ async function copyText(text){
   }
 }
 
-async function requestDiagnosis(requestType){
+function copyDmMessage(){
+  const field = document.getElementById('dmMessage');
+  field.focus();
+  field.select();
+  const status = document.getElementById('dmCopyStatus');
+  // The manual selection remains available even when clipboard permission is denied.
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(field.value).then(()=>{
+      status.textContent = 'コピーしました。XのDMに貼り付けてください。';
+    }).catch(()=>{
+      status.textContent = '文章を選択しました。長押しして「コピー」を選んでください。';
+    });
+  }else{
+    let copied = false;
+    try { copied = document.execCommand('copy'); } catch(e) {}
+    status.textContent = copied ? 'コピーしました。XのDMに貼り付けてください。' : '文章を選択しました。長押しして「コピー」を選んでください。';
+  }
+}
+
+function requestDiagnosis(requestType){
   const diagnosisId = makeDiagnosisId();
   const minTotal = state.records.reduce((sum,r)=>sum+(r.minMonthly||0),0);
   const maxTotal = state.records.reduce((sum,r)=>sum+(r.maxMonthly||0),0);
   const dmText = buildDmText(diagnosisId, minTotal, maxTotal, requestType);
-
   state.currentDiagnosisId = diagnosisId;
   state.currentRequestType = requestType;
-
-  await sendToChat(diagnosisId, requestType);
-  const copied = await copyText(dmText);
-
+  document.getElementById('dmMessage').value = dmText;
+  document.getElementById('dmCopyStatus').textContent = '「診断内容をコピーする」を押してください。';
   document.getElementById('dmDiagnosisId').textContent = diagnosisId;
   document.getElementById('fallbackDiagnosisId').textContent = diagnosisId;
   document.getElementById('fallbackPhone').value = '';
@@ -553,11 +573,9 @@ async function requestDiagnosis(requestType){
   document.getElementById('fallbackResult').textContent = '';
   document.getElementById('fallbackSubmit').disabled = false;
   document.getElementById('fallbackSubmit').textContent = '送信';
-
-  if(!copied){
-    alert('DM文を自動コピーできませんでした。DM画面で診断IDをお知らせください。');
-  }
   show('dmGuide');
+  // Report analytics independently; never block the customer DM flow.
+  sendToChat(diagnosisId, requestType).catch(e=>console.error(e));
 }
 
 function openDmCompose(){
